@@ -6175,7 +6175,7 @@ function catImovelHTML(id) {
    ===================================================================== */
 const NIVEIS_IMOVYN = {
   essencial: { nome: 'Essencial', mes: 229.9, usuarios: 5, txt: 'Para quem trabalha sozinho ou com equipe pequena: de 1 a 5 pessoas' },
-  equipe: { nome: 'Equipe', mes: 379.9, usuarios: 0, txt: 'Para imobiliárias com 6 ou mais pessoas, sem limite' } };
+  equipe: { nome: 'Pro', mes: 379.9, usuarios: 0, txt: 'Para imobiliárias com 6 ou mais pessoas, sem limite' } };
 const PLANOS_IMOVYN = (() => { const o = { mensal: { nome: 'Mensal', valor: 229.9, meses: 1 }, anual: { nome: 'Anual', valor: 1890, meses: 12 } };
   for (const [k, n] of Object.entries(NIVEIS_IMOVYN)) { o[k + '_mensal'] = { nome: n.nome + ' mensal', valor: n.mes, meses: 1, nivel: k }; o[k + '_anual'] = { nome: n.nome + ' anual', valor: Math.round(n.mes * 1000) / 100, meses: 12, nivel: k }; }
   return o; })();
@@ -6225,7 +6225,7 @@ function nvOuvirAssinatura() {
     if (!st.liberado && !espiar && !['assinatura', 'config'].includes(r)) { history.replaceState(null, '', '#/assinatura'); barrou = true; }
     _rota();
     if (!st.liberado && !espiar && (barrou || !sessionStorage.getItem('imovyn_aviso_pg'))) setTimeout(() => avisoPagamento(st), 350);
-    if (espiar && r !== 'assinatura') { const c = $('#content'); if (c) c.insertAdjacentHTML('afterbegin', `<div class="ass-faixa esp"><span><b>Você está conhecendo o sistema.</b> Para cadastrar e usar de verdade, comece seus ${DIAS_TESTE} dias grátis.</span><button class="btn sm pri" type="button" data-act="avisoPg">Começar ${DIAS_TESTE} dias grátis</button></div>`); return; }
+    if (espiar && r !== 'assinatura') { const c = $('#content'); if (c) c.insertAdjacentHTML('afterbegin', `<div class="ass-faixa esp"><span><b>Você está experimentando o imovyn.</b> Abra as telas e veja como funciona. Para salvar de verdade, comece seus ${DIAS_TESTE} dias grátis.</span><button class="btn sm pri" type="button" data-act="avisoPg">Começar ${DIAS_TESTE} dias grátis</button></div>`); return; }
     const el = $('#content'); if (!el || st.tipo === 'isenta' || st.tipo === 'carregando') return;
     let aviso = '';
     if (st.tipo === 'teste') aviso = st.cartao ? `<div class="ass-faixa"><span><b>${st.dias === 0 ? 'Último dia grátis' : st.dias + (st.dias === 1 ? ' dia grátis' : ' dias grátis')}.</b> A 1ª cobrança no cartão é em ${fmtData(st.ate)}.</span><a class="btn sm" href="#/assinatura">Ver assinatura</a></div>` : `<div class="ass-faixa"><span><b>${st.dias === 0 ? 'Último dia grátis' : st.dias + (st.dias === 1 ? ' dia grátis' : ' dias grátis')}</b> para testar tudo.</span><a class="btn sm pri" href="#/assinatura">Assinar agora</a></div>`;
@@ -6314,7 +6314,7 @@ function avisoPagamento(st) {
   const corpo = `<div class="ap-av">
     <div class="ap-ic">${marcaSVG(58, 'claro')}</div>
     <h2>${sem ? `Comece seus ${DIAS_TESTE} dias grátis` : st.tipo === 'teste_fim' ? 'Seu teste grátis terminou' : 'Falta o pagamento'}</h2>
-    <p>${sem ? `Para liberar o sistema, cadastre o cartão de crédito no Mercado Pago. <b>Você não paga nada agora.</b> A 1ª cobrança só acontece daqui a ${DIAS_TESTE} dias, e dá para cancelar antes.` : 'Seus dados estão guardados. Assim que o pagamento for confirmado, tudo volta a abrir.'}</p>
+    <p>${sem ? `Para salvar e usar de verdade, cadastre o cartão de crédito no Mercado Pago. <b>Você não paga nada agora.</b> A 1ª cobrança só acontece daqui a ${DIAS_TESTE} dias, e dá para cancelar antes.` : 'Seus dados estão guardados. Assim que o pagamento for confirmado, tudo volta a abrir.'}</p>
     ${admin ? `${sem ? `<span class="ap-esc">Escolha o seu plano:</span>${bt('essencial')}${bt('equipe')}` : `<a class="btn pri ap-big" href="#/assinatura" data-close>Ver planos e pagar</a>`}`
       : '<div class="notice info small">Peça para o administrador da imobiliária concluir a assinatura.</div>'}
     <ul class="ap-ok"><li>Pagamento seguro pelo Mercado Pago</li>${sem ? '<li>Cancele quando quiser, sem multa</li>' : ''}<li>Também aceita Pix ou débito na tela de planos</li></ul></div>`;
@@ -6325,10 +6325,11 @@ function avisoPagamento(st) {
 const ACOES_LIVRES = new Set(['assinar', 'assPer', 'cancelarAssinatura', 'instalarApp', 'avisoPg', 'proxPend', 'mkAba', 'verLanc', 'toggleMc', 'histOb', 'catCopiar', 'copiar', 'zerarAparelho']);
 const soConhecendo = () => { try { if (!U || !Nuvem.assinOk) return false; const st = situacaoAssinatura(); return !st.liberado && st.tipo === 'sem'; } catch { return false; } };
 ACT.avisoPg = () => avisoPagamento(situacaoAssinatura());
+/* pode abrir tudo e preencher os formulários; o aviso aparece na hora de salvar/confirmar */
 document.addEventListener('click', e => {
   if (!soConhecendo()) return;
-  const b = e.target.closest('[data-act]');
-  if (b && !ACOES_LIVRES.has(b.dataset.act) && !b.closest('.ap-av')) { e.preventDefault(); e.stopImmediatePropagation(); avisoPagamento(situacaoAssinatura()); }
+  const b = e.target.closest('.ov .modal-f .btn.pri, .ov .modal-f .btn.ok, .ov .modal-f .btn.danger');
+  if (b && !b.hasAttribute('data-close') && !b.closest('.ap-av') && !ACOES_LIVRES.has(b.dataset.act || '')) { e.preventDefault(); e.stopImmediatePropagation(); avisoPagamento(situacaoAssinatura()); }
 }, true);
 document.addEventListener('submit', e => {
   if (!soConhecendo() || e.target.closest('.login')) return;
