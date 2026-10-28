@@ -15,16 +15,16 @@ export const NIVEIS = (env = {}) => ({
 export const PLANOS = (env = {}) => {
   const o = {};
   for (const [k, n] of Object.entries(NIVEIS(env))) {
-    o[k + "_mensal"] = { valor: n.mes, meses: 1, nome: "imovyn " + n.nome + " Mensal" };
-    o[k + "_anual"] = { valor: Math.round(n.mes * 10 * 100) / 100, meses: 12, nome: "imovyn " + n.nome + " Anual" };
+    o[k + "_mensal"] = { valor: n.mes, meses: 1, nome: "Imovyn " + n.nome + " Mensal" };
+    o[k + "_anual"] = { valor: Math.round(n.mes * 10 * 100) / 100, meses: 12, nome: "Imovyn " + n.nome + " Anual" };
   }
-  o.mensal = { valor: Number(env.PRECO_MENSAL || 229.9), meses: 1, nome: "imovyn Mensal" }; // planos antigos (compatibilidade)
-  o.anual = { valor: Number(env.PRECO_ANUAL || 1890), meses: 12, nome: "imovyn Anual" };
+  o.mensal = { valor: Number(env.PRECO_MENSAL || 229.9), meses: 1, nome: "Imovyn Mensal" }; // planos antigos (compatibilidade)
+  o.anual = { valor: Number(env.PRECO_ANUAL || 1890), meses: 12, nome: "Imovyn Anual" };
   return o;
 };
 const TID_PRINCIPAL = "principal"; // cliente fundador (Alto Lar): dados na raiz do banco
 const FUNDADOR_GRATIS_ATE = "2026-11-27"; // Alto Lar: 1 mês grátis para os testes; a 1ª cobrança só depois disso
-const diasTeste = (env = {}) => Number(env.DIAS_TESTE || 7);
+const diasTeste = (env = {}) => Number(env.DIAS_TESTE || 30);
 export function addDaysISO(iso, n) { const d = new Date(String(iso).slice(0, 10) + "T12:00:00Z"); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
 export function addMonthsISO(iso, months, extraDays = 0) {
   const d = new Date(String(iso).slice(0, 10) + "T12:00:00Z");
