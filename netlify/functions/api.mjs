@@ -5,6 +5,7 @@
 import { initializeApp, cert, getApps } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
+import { createHash, timingSafeEqual } from "node:crypto";
 
 // Planos por tamanho da imobiliária. Anual = 10 meses (2 meses grátis).
 // Na Netlify dá para mudar os preços sem mexer no código: PRECO_ESSENCIAL e PRECO_EQUIPE (plano Pro), mensais.
@@ -174,6 +175,104 @@ export async function handleWebhook(evento, query, deps, env = {}) {
   return { status: 200, text: "ok" };
 }
 
+// ===================== PAINEL DO DONO =====================
+// POST /api/painel  (cabeçalho x-painel-senha) -> lista de quem se cadastrou, com a situação da assinatura.
+// Só responde com a senha certa, guardada na variável PAINEL_SENHA da Netlify (mínimo 10 caracteres).
+const PAINEL_CORS = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "POST, OPTIONS", "Access-Control-Allow-Headers": "content-type, x-painel-senha", "Access-Control-Max-Age": "600" };
+const painelJson = (o, status = 200) => new Response(JSON.stringify(o), { status, headers: Object.assign({ "Content-Type": "application/json", "Cache-Control": "no-store" }, PAINEL_CORS) });
+export function painelSenhaOk(enviada, env = {}) {
+  const certa = String(env.PAINEL_SENHA || "");
+  if (certa.length < 10) return null; // painel desligado
+  const h = (x) => createHash("sha256").update(String(x || "")).digest();
+  return timingSafeEqual(h(enviada), h(certa));
+}
+const isoData = (x) => { if (!x) return ""; const d = new Date(x); return isNaN(d) ? "" : d.toISOString(); };
+// Situação da assinatura em palavras fixas, iguais nos dois apps
+export function painelSituacao(a, hoje) {
+  if (!a || !a.status) return "sem"; // entrou e não cadastrou o cartão (nem pagou o Pix)
+  const st = a.status;
+  if (["ativa", "teste", "atrasada", "pendente"].includes(st) && a.validoAte && a.validoAte < hoje) return "vencida";
+  return st; // teste, ativa, pendente, atrasada, cancelada
+}
+export function painelPagamentos(a) {
+  const h = (a && a.historico) || [];
+  const pagos = h.filter((x) => x.evento === "PAYMENT_RECEIVED");
+  return { pago: Math.round(pagos.reduce((s, x) => s + (Number(x.valor) || 0), 0) * 100) / 100, nPagamentos: pagos.length, ultimoPagamento: pagos.length ? pagos.map((x) => x.vencimento || x.em || "").sort().pop() : "" };
+}
+export async function painelUsuariosAuth(auth) {
+  const out = []; let token;
+  do {
+    const r = await auth.listUsers(1000, token);
+    for (const u of r.users) out.push({ uid: u.uid, email: String(u.email || "").toLowerCase(), nome: u.displayName || "", telefone: u.phoneNumber || "", criado: isoData(u.metadata && u.metadata.creationTime), ultimo: isoData(u.metadata && (u.metadata.lastRefreshTime || u.metadata.lastSignInTime)) });
+    token = r.pageToken;
+  } while (token);
+  return out;
+}
+export async function handlePainel(req, lerDados, env = {}) {
+  if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: PAINEL_CORS });
+  if (req.method !== "POST") return painelJson({ erro: "Use POST" }, 405);
+  const ok = painelSenhaOk(req.headers.get("x-painel-senha"), env);
+  if (ok === null) return painelJson({ erro: "O painel ainda não foi ligado neste app. Falta a variável PAINEL_SENHA na Netlify (com pelo menos 10 letras ou números)." }, 503);
+  if (!ok) { await new Promise((r) => setTimeout(r, 1200)); return painelJson({ erro: "Senha errada." }, 401); }
+  try {
+    const hoje = new Date(Date.now() - 3 * 3600e3).toISOString().slice(0, 10);
+    return painelJson({ ok: true, hoje, geradoEm: new Date().toISOString(), clientes: await lerDados(hoje) });
+  } catch (e) {
+    return painelJson({ erro: "Não deu para ler os dados agora: " + (e.message || "erro") }, 500);
+  }
+}
+// ===================== FIM DO PAINEL (parte comum) =====================
+
+// Painel: lê as imobiliárias do Imovyn (cada uma em imob/{tid}; a Alto Lar fica na raiz como "principal")
+export async function lerPainelImovyn(store, auth, hoje, env = {}) {
+  const refs = await store.collection("imob").listDocuments();
+  const tids = ["principal", ...refs.map((d) => d.id)];
+  const [usuarios, acessos] = await Promise.all([painelUsuariosAuth(auth), store.collection("acessos").get()]);
+  const porEmail = new Map(usuarios.map((u) => [u.email, u]));
+  const comImob = new Set(acessos.docs.map((d) => String(d.id).toLowerCase()));
+  const contar = async (q) => { try { return (await q.count().get()).data().count; } catch (e) { try { return (await q.select().get()).size; } catch (e2) { return null; } } };
+  const pl = PLANOS(env);
+  const lista = await Promise.all(tids.map(async (tid) => {
+    const pre = tid === "principal" ? "" : "imob/" + tid + "/";
+    const [dono, ass, emp, membros, imoveis, sess] = await Promise.all([
+      store.doc(pre + "meta/dono").get(),
+      store.doc("assinaturas/" + tid).get(),
+      store.doc(pre + "c__obj/empresa").get(),
+      contar(store.collection(pre + "membros")),
+      contar(store.collection(pre + "c_imoveis")),
+      store.collection(pre + "sessoes").orderBy("visto", "desc").limit(1).get().catch(() => null),
+    ]);
+    const d = dono.exists ? dono.data() : null;
+    const a = ass.exists ? ass.data() : null;
+    if (!d && !a) return null; // pasta vazia
+    let e = {}; try { e = emp.exists ? JSON.parse(emp.data().j || "{}") || {} : {}; } catch (x) { e = {}; }
+    const email = String((d && d.email) || "").toLowerCase();
+    const u = porEmail.get(email) || {};
+    const ultimoSess = sess && !sess.empty ? isoData(sess.docs[0].data().visto) : "";
+    const plano = (a && (a.plano || a.planoPendente)) || "";
+    return Object.assign({
+      app: "imovyn", id: tid,
+      nome: (e.nome && e.nome !== "Minha Imobiliária" ? e.nome : "") || (d && d.imob) || (tid === "principal" ? "Alto Lar" : "Imobiliária sem nome"),
+      pessoa: (d && d.nome) || u.nome || "", email,
+      telefone: e.whatsapp || e.telefone || u.telefone || "", cidade: e.cidade || "",
+      criado: isoData(d && (d.criadoEm || d.em)) || u.criado || "",
+      ultimoUso: [ultimoSess, u.ultimo || ""].sort().pop(),
+      situacao: painelSituacao(a, hoje), plano, forma: (a && a.forma) || "",
+      valor: (a && a.valor) || (pl[plano] && pl[plano].valor) || 0,
+      cobrancaEm: (a && a.cobrancaEm) || "", validoAte: (a && a.validoAte) || "", canceladaEm: (a && a.canceladaEm) || "",
+      fundador: tid === "principal",
+      detalhes: [membros != null ? membros + (membros === 1 ? " usuário" : " usuários") : "", imoveis != null ? imoveis + (imoveis === 1 ? " imóvel" : " imóveis") : ""].filter(Boolean).join(" · "),
+    }, painelPagamentos(a));
+  }));
+  // Quem fez o login com o Google mas não chegou a criar a imobiliária
+  const soLogin = usuarios.filter((u) => u.email && !comImob.has(u.email)).map((u) => ({
+    app: "imovyn", id: "u_" + u.uid, nome: "Ainda não criou a imobiliária", pessoa: u.nome, email: u.email, telefone: u.telefone, cidade: "",
+    criado: u.criado, ultimoUso: u.ultimo, situacao: "login", plano: "", forma: "", valor: 0, cobrancaEm: "", validoAte: "", canceladaEm: "", detalhes: "", pago: 0, nPagamentos: 0, ultimoPagamento: "",
+  }));
+  return [...lista.filter(Boolean), ...soLogin];
+}
+
+
 const env = process.env;
 function firebase() {
   if (!getApps().length) initializeApp({ credential: cert(JSON.parse(env.FIREBASE_SERVICE_ACCOUNT)) });
@@ -213,6 +312,7 @@ const json = (o, status = 200) => new Response(JSON.stringify(o), { status, head
 
 export default async (req) => {
   const url = new URL(req.url);
+  if (url.pathname.endsWith("/api/painel")) return handlePainel(req, (hoje) => { const { auth, store } = firebase(); return lerPainelImovyn(store, auth, hoje, env); }, env);
   if (url.pathname.endsWith("/mp-webhook")) {
     if (req.method !== "POST") return new Response("ok");
     try {
@@ -233,4 +333,4 @@ export default async (req) => {
     return json({ erro: "Não deu para concluir agora: " + (e.message || "erro") }, 500);
   }
 };
-export const config = { path: ["/api/assinatura", "/api/mp-webhook"] };
+export const config = { path: ["/api/assinatura", "/api/mp-webhook", "/api/painel"] };
