@@ -7,10 +7,10 @@ import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 
 // Planos por tamanho da imobiliária. Anual = 10 meses (2 meses grátis).
-// Na Netlify dá para mudar os preços sem mexer no código: PRECO_ESSENCIAL e PRECO_EQUIPE (mensais).
+// Na Netlify dá para mudar os preços sem mexer no código: PRECO_ESSENCIAL e PRECO_EQUIPE (plano Pro), mensais.
 export const NIVEIS = (env = {}) => ({
   essencial: { nome: "Essencial", mes: Number(env.PRECO_ESSENCIAL || 229.9) }, // 1 a 5 usuários
-  equipe: { nome: "Equipe", mes: Number(env.PRECO_EQUIPE || 379.9) }, // 6 ou mais usuários
+  equipe: { nome: "Pro", mes: Number(env.PRECO_EQUIPE || 379.9) }, // 6 ou mais usuários
 });
 export const PLANOS = (env = {}) => {
   const o = {};
