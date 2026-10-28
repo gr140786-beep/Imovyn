@@ -1281,6 +1281,18 @@ body:has(.ov) #ins-faixa{display:none}
 .ass-pl-f .btn{white-space:nowrap}
 .ass-pls.t2 .ass-it li{font-size:13.5px;line-height:1.35;padding-left:20px;text-indent:-20px}
 @media (max-width:700px){.ass-pl-h{min-height:0}}
+.ap-av{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:4px 2px}
+.ap-ic{width:84px;height:84px;border-radius:24px;background:linear-gradient(145deg,#fff,#eef0f3);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px rgba(17,19,22,.12);margin-bottom:4px}
+.ap-av h2{margin:4px 0 0;font-size:24px;font-weight:850;letter-spacing:-.02em}
+.ap-av p{margin:0;color:#4b5059;font-size:15.5px;line-height:1.5}
+.ap-esc{font-weight:700;font-size:14px;color:#6b7078;margin-top:6px;align-self:flex-start}
+.ap-pl{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#16181c;color:#fff;border:0;border-radius:16px;padding:16px 18px;cursor:pointer;text-align:left;font-family:inherit}
+.ap-pl:nth-of-type(2){background:#fff;color:#16181c;border:2px solid #16181c}
+.ap-pl span{display:flex;flex-direction:column}.ap-pl b{font-size:17px}.ap-pl small{font-size:13px;opacity:.75}
+.ap-pl em{font-style:normal;font-weight:850;font-size:18px;white-space:nowrap}.ap-pl em small{font-weight:600}
+.ap-big{width:100%;min-height:52px;justify-content:center}
+.ap-ok{list-style:none;padding:0;margin:6px 0 0;display:flex;flex-direction:column;gap:6px;font-size:13.5px;color:#4b5059}.ap-ok li::before{content:"✓";color:#23874f;font-weight:800;margin-right:8px}
+.ov:has(.ap-av) .modal-h h3:empty{display:none}
 </style>
 </head>
 <body>
@@ -6207,8 +6219,10 @@ function nvOuvirAssinatura() {
   rota = function () {
     if (!U) return _rota();
     const st = situacaoAssinatura(), r = (location.hash.replace(/^#\/?/, '').split('/')[0] || '');
-    if (!st.liberado && !['assinatura', 'config'].includes(r)) { history.replaceState(null, '', '#/assinatura'); }
+    let barrou = false;
+    if (!st.liberado && !['assinatura', 'config'].includes(r)) { history.replaceState(null, '', '#/assinatura'); barrou = true; }
     _rota();
+    if (!st.liberado && (barrou || !sessionStorage.getItem('imovyn_aviso_pg'))) setTimeout(() => avisoPagamento(st), 350);
     const el = $('#content'); if (!el || st.tipo === 'isenta' || st.tipo === 'carregando') return;
     let aviso = '';
     if (st.tipo === 'teste') aviso = st.cartao ? `<div class="ass-faixa"><span><b>${st.dias === 0 ? 'Último dia grátis' : st.dias + (st.dias === 1 ? ' dia grátis' : ' dias grátis')}.</b> A 1ª cobrança no cartão é em ${fmtData(st.ate)}.</span><a class="btn sm" href="#/assinatura">Ver assinatura</a></div>` : `<div class="ass-faixa"><span><b>${st.dias === 0 ? 'Último dia grátis' : st.dias + (st.dias === 1 ? ' dia grátis' : ' dias grátis')}</b> para testar tudo.</span><a class="btn sm pri" href="#/assinatura">Assinar agora</a></div>`;
@@ -6286,6 +6300,23 @@ setTimeout(() => {
     return _novo(...x);
   };
 }, 0);
+
+/* aviso no meio da tela: cadastrar o cartão para começar o teste (ou pagar, se travou) */
+function avisoPagamento(st) {
+  if ($('.ov .ap-av') || !U) return;
+  try { sessionStorage.setItem('imovyn_aviso_pg', '1'); } catch { }
+  const admin = U.papel === 'admin', sem = st.tipo === 'sem';
+  const per = 'mensal', bt = (nv) => { const n = NIVEIS_IMOVYN[nv], p = PLANOS_IMOVYN[nv + '_' + per];
+    return `<button class="ap-pl" data-act="assinar" data-plano="${nv}_${per}" data-forma="cartao"><span><b>${n.nome}</b><small>${n.usuarios ? 'de 1 a ' + n.usuarios + ' pessoas' : '6 ou mais pessoas'}</small></span><em>${brl(p.valor)}<small>/mês</small></em></button>`; };
+  const corpo = `<div class="ap-av">
+    <div class="ap-ic">${marcaSVG(58, 'claro')}</div>
+    <h2>${sem ? `Comece seus ${DIAS_TESTE} dias grátis` : st.tipo === 'teste_fim' ? 'Seu teste grátis terminou' : 'Falta o pagamento'}</h2>
+    <p>${sem ? `Para liberar o sistema, cadastre o cartão de crédito no Mercado Pago. <b>Você não paga nada agora.</b> A 1ª cobrança só acontece daqui a ${DIAS_TESTE} dias, e dá para cancelar antes.` : 'Seus dados estão guardados. Assim que o pagamento for confirmado, tudo volta a abrir.'}</p>
+    ${admin ? `${sem ? `<span class="ap-esc">Escolha o seu plano:</span>${bt('essencial')}${bt('equipe')}` : `<a class="btn pri ap-big" href="#/assinatura" data-close>Ver planos e pagar</a>`}`
+      : '<div class="notice info small">Peça para o administrador da imobiliária concluir a assinatura.</div>'}
+    <ul class="ap-ok"><li>Pagamento seguro pelo Mercado Pago</li>${sem ? '<li>Cancele quando quiser, sem multa</li>' : ''}<li>Também aceita Pix ou débito na tela de planos</li></ul></div>`;
+  modal({ titulo: '', tam: 'sm', corpo, rodape: `<button class="btn ghost" data-close>Ver planos com calma</button>` });
+}
 /* =====================================================================
    COLOCAR O APP NA TELA DE INÍCIO (passo a passo bem simples)
    - Faixa fixa embaixo da tela no celular/iPad até a pessoa instalar ou fechar.
