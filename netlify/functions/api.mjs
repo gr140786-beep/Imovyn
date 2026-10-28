@@ -18,7 +18,7 @@ export const PLANOS = (env = {}) => {
     o[k + "_mensal"] = { valor: n.mes, meses: 1, nome: "Imovyn " + n.nome + " Mensal" };
     o[k + "_anual"] = { valor: Math.round(n.mes * 10 * 100) / 100, meses: 12, nome: "Imovyn " + n.nome + " Anual" };
   }
-  o.mensal = { valor: Number(env.PRECO_MENSAL || 229.9), meses: 1, nome: "Imovyn Mensal" }; // planos antigos (compatibilidade)
+  o.mensal = { valor: Number(env.PRECO_MENSAL || 249.9), meses: 1, nome: "Imovyn Mensal" }; // plano único (o que está à venda)
   o.anual = { valor: Number(env.PRECO_ANUAL || 1890), meses: 12, nome: "Imovyn Anual" };
   return o;
 };
