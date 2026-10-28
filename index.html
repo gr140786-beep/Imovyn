@@ -1440,6 +1440,12 @@ html.escuro body:not(.cat-on) .an-fin button.on{background:#f3f4f6;color:#16181c
 .an-step button{flex:none;width:42px;height:100%;border:0;background:var(--g50);font-size:20px;cursor:pointer;color:var(--text)}
 .an-step input{flex:1;min-width:0;border:0!important;text-align:center;font-weight:800;font-size:16px;height:100%;background:transparent!important}
 .an-area{height:46px}
+/* botão Anunciar: menor, branco, no padrão */
+.an-cta{width:auto!important;display:inline-flex!important;gap:12px!important;padding:12px 18px 12px 12px!important;background:#fff!important;color:#16181c!important;border:1px solid var(--line)!important;border-radius:14px!important;box-shadow:0 4px 14px rgba(17,19,22,.06)!important}
+.an-cta>svg{width:36px!important;height:36px!important;padding:8px!important;border-radius:10px!important;background:#16181c!important;color:#fff!important}
+.an-cta b{font-size:15.5px!important;color:#16181c!important}.an-cta small{font-size:13px!important;color:var(--muted)!important}
+html.escuro body:not(.cat-on) .an-cta{background:#1b1d21!important;border-color:#2b2e34!important}html.escuro body:not(.cat-on) .an-cta b{color:#fff!important}html.escuro body:not(.cat-on) .an-cta>svg{background:#f3f4f6!important;color:#16181c!important}
+@media (max-width:600px){.an-cta{width:100%!important}}
 </style>
 </head>
 <body>
@@ -2949,7 +2955,6 @@ function pgVisao() {
         <div style="font-size:34px;font-weight:800" class="mono">${t.concluidos} <span style="font-size:18px;color:var(--muted)">de ${t.n}</span></div><div class="muted small">imóveis 100% concluídos no mês</div>
         <div class="prog" style="margin:12px 0 16px"><i style="width:${t.n ? t.concluidos / t.n * 100 : 0}%"></i></div>
         <a class="btn pri" style="width:100%" href="#/mensal/${comp}">${ic('check')} Abrir controle de aluguel</a>
-        <h4 style="margin:18px 0 8px">Atalhos</h4><div class="atalhos">${linkAtalho(S.config.atalhos?.banco, 'Banco')}${linkAtalho(S.config.atalhos?.iptu, 'IPTU')}${linkAtalho(S.config.atalhos?.condominio, 'Condomínio')}${linkAtalho(S.config.atalhos?.seguradora, 'Seguradora')}${linkAtalho(S.config.atalhos?.email, 'E-mail')}<a class="btn sm ghost" target="_blank" rel="noopener" href="https://web.whatsapp.com">WhatsApp ↗</a><button class="btn sm ghost" data-act="filaEnvios" data-comp="${comp}">Fila de envios</button><button class="btn sm ghost" data-act="conciliar">Conciliar extrato</button><button class="btn sm ghost" data-act="ics">Exportar para a agenda</button></div>
         <div class="stack small" style="margin-top:16px">
           <div class="row between"><span class="muted">Total cobrado</span><b class="mono">${brl(t.total)}</b></div>
           <div class="row between"><span class="muted">Encargos de terceiros</span><b class="mono">${brl(t.terceiros)}</b></div>
@@ -6323,11 +6328,11 @@ function catImovelHTML(id) {
 const NIVEIS_IMOVYN = {
   essencial: { nome: 'Essencial', mes: 229.9, usuarios: 5, txt: 'Indicado para corretores autônomos e imobiliárias com até 5 usuários' },
   equipe: { nome: 'Pro', mes: 379.9, usuarios: 0, txt: 'Indicado para imobiliárias a partir de 6 usuários' } };
-const PLANOS_IMOVYN = (() => { const o = { mensal: { nome: 'Mensal', valor: 229.9, meses: 1 }, anual: { nome: 'Anual', valor: 1890, meses: 12 } };
+const PLANOS_IMOVYN = (() => { const o = { mensal: { nome: 'Imovyn Mensal', valor: 249.9, meses: 1 }, anual: { nome: 'Imovyn Anual', valor: 1890, meses: 12 } };
   for (const [k, n] of Object.entries(NIVEIS_IMOVYN)) { o[k + '_mensal'] = { nome: n.nome + ' mensal', valor: n.mes, meses: 1, nivel: k }; o[k + '_anual'] = { nome: n.nome + ' anual', valor: Math.round(n.mes * 1000) / 100, meses: 12, nivel: k }; }
   return o; })();
 /* limite de usuários do plano (0 = sem limite). Sem plano escolhido ainda, ou na Alto Lar, não limita. */
-function limiteUsuarios() {
+function limiteUsuarios() { return 0; /* plano único: usuários ilimitados */
   if (assinaturaIsenta() || Nuvem.tid === TID_PRINCIPAL) return 0;
   const a = Nuvem.assin || {}, k = a.plano || a.planoPendente || '', p = PLANOS_IMOVYN[k];
   return p && p.nivel ? NIVEIS_IMOVYN[p.nivel].usuarios : 0;
@@ -6395,13 +6400,12 @@ function pgAssinatura() {
   const bloqueio = !st.liberado ? (st.tipo === 'sem'
     ? `<div class="notice info" style="margin-bottom:16px"><b>Falta só um passo para começar.</b> Cadastre o cartão e use tudo grátis por 1 mês. A 1ª cobrança só acontece depois do teste. Se cancelar antes, não paga nada.</div>`
     : `<div class="notice bad" style="margin-bottom:16px"><b>O sistema está travado.</b> Seus dados continuam guardados e voltam assim que o pagamento for confirmado. Enquanto isso, só esta tela e Configurações abrem.</div>`) : '';
-  const per = Nuvem._assPer || 'mensal';
-  const pl = (nv) => { const n = NIVEIS_IMOVYN[nv], k = nv + '_' + per, p = PLANOS_IMOVYN[k], atual = a.plano === k;
-    return `<div class="ass-pl ${nv === 'equipe' ? 'destaque' : ''}">${nv === 'equipe' ? '<span class="ass-sel">Recomendado</span>' : ''}
-      <div class="ass-pl-h"><b>${n.nome}</b><span class="small muted">${n.txt}</span></div>
-      <div class="ass-v">${brl(p.valor)}<small>/${per === 'anual' ? 'ano' : 'mês'}</small></div>
-      <span class="small muted ass-pl-s">${per === 'anual' ? `equivale a ${brl(p.valor / 12)} por mês` : 'cobrado todo mês'}</span>
-      <ul class="ass-it"><li>${n.usuarios ? `<b>Até ${n.usuarios} usuários</b>` : '<b>Usuários ilimitados</b>'}</li><li>Controle de aluguel e contratos</li><li>Site de imóveis com WhatsApp</li><li>Imóveis sem limite</li></ul>
+  const pl = (k) => { const p = PLANOS_IMOVYN[k], anual = k === 'anual', atual = a.plano === k, eco = PLANOS_IMOVYN.mensal.valor * 12 - p.valor;
+    return `<div class="ass-pl ${anual ? 'destaque' : ''}">${anual ? `<span class="ass-sel">Economize ${brl(eco)}</span>` : ''}
+      <div class="ass-pl-h"><b>${anual ? 'Anual' : 'Mensal'}</b><span class="small muted">${anual ? 'Pague uma vez por ano e economize' : 'Pague mês a mês, sem compromisso'}</span></div>
+      <div class="ass-v">${brl(p.valor)}<small>/${anual ? 'ano' : 'mês'}</small></div>
+      <span class="small muted ass-pl-s">${anual ? `equivale a ${brl(p.valor / 12)} por mês` : 'cobrado todo mês'}</span>
+      <ul class="ass-it"><li><b>Usuários ilimitados</b></li><li>Controle de aluguel e contratos</li><li>Site de imóveis com WhatsApp</li><li>Imóveis sem limite</li></ul>
       <div class="ass-pl-f">${atual ? '<span class="pill pago" style="align-self:center">Seu plano</span>' : ''}
       ${admin && !atual ? `<button class="btn pri" data-act="assinar" data-plano="${k}" data-forma="cartao">${podeTeste ? `Começar ${TESTE_TXT} grátis` : 'Assinar no cartão'}</button><button class="btn" data-act="assinar" data-plano="${k}" data-forma="avulso">Pix ou débito</button>` : ''}</div></div>`; };
   const linhaAte = st.tipo === 'teste' && st.cartao ? ['1ª cobrança no cartão', fmtData(st.ate)] : [st.tipo === 'teste' ? 'Grátis até' : 'Acesso liberado até', st.ate ? fmtData(st.ate) : '-'];
@@ -6411,9 +6415,7 @@ function pgAssinatura() {
       ${a.linkPagamento && !['ativa', 'teste'].includes(st.tipo) ? `<a class="btn ok" style="margin-top:14px" href="${esc(a.linkPagamento)}" target="_blank" rel="noopener">Concluir no Mercado Pago</a>` : ''}
       ${!admin ? '<p class="small muted" style="margin-bottom:0">Só o administrador da imobiliária pode assinar ou cancelar.</p>' : ''}</div></div>
     <h3 style="margin:22px 0 10px">Escolha o plano</h3>
-    <div class="ass-per"><button type="button" class="${per === 'mensal' ? 'on' : ''}" data-act="assPer" data-p="mensal">Pagar por mês</button><button type="button" class="${per === 'anual' ? 'on' : ''}" data-act="assPer" data-p="anual">Pagar por ano<small>2 meses grátis</small></button></div>
-    <div class="ass-pls t2">${pl('essencial')}${pl('equipe')}</div>
-    ${limiteUsuarios() && usuariosAtivos() > limiteUsuarios() ? `<div class="notice warn" style="margin-top:12px">Sua equipe tem ${usuariosAtivos()} usuários e o seu plano permite ${limiteUsuarios()}. Escolha um plano maior para cadastrar mais pessoas.</div>` : ''}
+    <div class="ass-pls t2">${pl('mensal')}${pl('anual')}</div>
     <p class="small muted">${podeTeste ? `<b>Começar ${TESTE_TXT} grátis:</b> você cadastra o cartão de crédito no Mercado Pago e usa tudo por 1 mês. A cobrança só começa depois. Pode cancelar aqui mesmo antes disso, sem pagar nada. Pix ou débito não tem teste grátis. ` : ''}Cartão de crédito: renova sozinho a cada período. Pix ou débito: você paga um período por vez e, se pagar antes de vencer, os dias se somam.</p>
     ${admin && a.mpAssinatura && a.status !== 'cancelada' ? `<button class="btn danger" data-act="cancelarAssinatura" style="margin-top:6px">${st.tipo === 'teste' && st.cartao ? 'Cancelar o teste (não será cobrado)' : 'Cancelar renovação automática'}</button>` : ''}
     ${(a.historico || []).length ? `<div class="card" style="margin-top:18px"><div class="card-h"><h3>Pagamentos</h3></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Data</th><th class="num">Valor</th><th>Situação</th></tr></thead><tbody>${a.historico.map(h => `<tr><td>${fmtData(h.vencimento)}</td><td class="num">${brl(h.valor || 0)}</td><td>${h.evento === 'PAYMENT_RECEIVED' ? pill('pago', 'Pago') : h.evento === 'PAYMENT_OVERDUE' ? pill('vencido', 'Recusado') : pill('pendente', 'Aguardando')}</td></tr>`).join('')}</tbody></table></div></div>` : ''}`;
@@ -6457,13 +6459,13 @@ function avisoPagamento(st) {
   if ($('.ov .ap-av') || !U) return;
   try { sessionStorage.setItem('imovyn_aviso_pg', '1'); } catch { }
   const admin = U.papel === 'admin', sem = st.tipo === 'sem';
-  const per = 'mensal', bt = (nv) => { const n = NIVEIS_IMOVYN[nv], p = PLANOS_IMOVYN[nv + '_' + per];
-    return `<button class="ap-pl" data-act="assinar" data-plano="${nv}_${per}" data-forma="cartao"><span><b>${n.nome}</b><small>${n.usuarios ? 'até ' + n.usuarios + ' usuários' : 'usuários ilimitados'}</small></span><em>${brl(p.valor)}<small>/mês</small></em></button>`; };
+  const bt = (k) => { const p = PLANOS_IMOVYN[k], anual = k === 'anual';
+    return `<button class="ap-pl" data-act="assinar" data-plano="${k}" data-forma="cartao"><span><b>${anual ? 'Anual' : 'Mensal'}</b><small>${anual ? 'equivale a ' + brl(p.valor / 12) + ' por mês' : 'sem compromisso'}</small></span><em>${brl(p.valor)}<small>/${anual ? 'ano' : 'mês'}</small></em></button>`; };
   const corpo = `<div class="ap-av">
     <div class="ap-ic">${marcaSVG(58, 'claro')}</div>
     <h2>${sem ? `Ganhe 1 mês grátis` : st.tipo === 'teste_fim' ? 'Seu teste grátis terminou' : 'Falta o pagamento'}</h2>
     <p>${sem ? `Para salvar e usar de verdade, cadastre o cartão de crédito no Mercado Pago. <b>Você não paga nada agora.</b> A 1ª cobrança só acontece daqui a 1 mês, e dá para cancelar antes.` : 'Seus dados estão guardados. Assim que o pagamento for confirmado, tudo volta a abrir.'}</p>
-    ${admin ? `${sem ? `<span class="ap-esc">Escolha o seu plano:</span>${bt('essencial')}${bt('equipe')}` : `<a class="btn pri ap-big" href="#/assinatura" data-close>Ver planos e pagar</a>`}`
+    ${admin ? `${sem ? `<span class="ap-esc">Escolha como prefere pagar:</span>${bt('mensal')}${bt('anual')}` : `<a class="btn pri ap-big" href="#/assinatura" data-close>Ver planos e pagar</a>`}`
       : '<div class="notice info small">Peça para o administrador da imobiliária concluir a assinatura.</div>'}
     <ul class="ap-ok"><li>Pagamento seguro pelo Mercado Pago</li>${sem ? '<li>Cancele quando quiser, sem multa</li>' : ''}<li>Também aceita Pix ou débito na tela de planos</li></ul></div>`;
   modal({ titulo: '', tam: 'sm', corpo, rodape: `<button class="btn ghost" data-close>Ver planos com calma</button>` });
@@ -6891,7 +6893,7 @@ function baixar(nome, conteudo, tipo) {
 }
 
 /* ---------- Configurações ---------- */
-const CFG_TABS = [['sync', 'Sincronização'], ['empresa', 'Empresa, Pix e cobrança'], ['atalhos', 'Atalhos'], ['mensagens', 'Modelos de mensagem'], ['usuarios', 'Usuários e permissões'], ['integracoes', 'Integrações'], ['automacoes', 'Automações'], ['importar', 'Importar planilha'], ['backup', 'Backup'], ['demo', 'Dados de demonstração'], ['historico', 'Histórico de alterações']];
+const CFG_TABS = [['sync', 'Sincronização'], ['empresa', 'Empresa, Pix e cobrança'], ['mensagens', 'Modelos de mensagem'], ['usuarios', 'Usuários e permissões'], ['integracoes', 'Integrações'], ['automacoes', 'Automações'], ['importar', 'Importar planilha'], ['backup', 'Backup'], ['demo', 'Dados de demonstração'], ['historico', 'Histórico de alterações']];
 function pgConfig(tab) {
   tab = CFG_TABS.some(t => t[0] === tab) ? tab : 'empresa';
   const restrito = ['usuarios', 'backup', 'demo', 'empresa', 'integracoes', 'atalhos', 'catalogo'].includes(tab) && !pode('sistema');
