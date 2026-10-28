@@ -1247,6 +1247,26 @@ body.cat-on #sup{bottom:calc(92px + env(safe-area-inset-bottom))!important}
 .c2-bal{border-radius:16px!important}
 @media (min-width:900px){.c2-hero{margin:16px max(16px,calc((100vw - 1212px)/2));padding:80px 48px 36px!important}.c2-hero h1{font-size:52px!important}.c2-busca{grid-template-columns:1fr 1fr 1.4fr!important;max-width:900px}.c2-seg{max-width:420px;align-self:flex-start!important}.c2-nav{left:50%!important;right:auto!important;width:560px!important}}
 @media (max-width:600px){.c2-nav a,.c2-nav button{height:60px!important}}
+/* colocar na tela de início */
+#ins-faixa{position:fixed;left:10px;right:10px;bottom:calc(76px + env(safe-area-inset-bottom));z-index:85;display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #e6e6e3;border-radius:18px;padding:10px 10px 10px 12px;box-shadow:0 14px 34px rgba(17,19,22,.18)}
+.ins-f-i{flex:none;width:42px;height:42px;border-radius:12px;background:#f5f5f2;display:flex;align-items:center;justify-content:center}
+.ins-f-t{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.25}.ins-f-t b{font-size:14.5px}.ins-f-t small{color:var(--muted);font-size:12.5px}
+#ins-faixa .btn{flex:none;min-height:40px}
+.ins-f-x{flex:none;width:32px;height:32px;border:0;border-radius:50%;background:#f2f2f0;color:#555;cursor:pointer}
+body:has(.ov) #ins-faixa{display:none}
+@media (min-width:901px){#ins-faixa{left:auto;right:20px;bottom:20px;max-width:420px}}
+.ins{display:flex;flex-direction:column;gap:12px}
+.ins-top{display:flex;gap:14px;align-items:center;background:#f7f7f5;border-radius:16px;padding:14px}
+.ins-app{flex:none;width:66px;height:66px;border-radius:18px;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(0,0,0,.1)}
+.ins-top b{display:block;font-size:16.5px;margin-bottom:3px}.ins-top span{font-size:14.5px;color:#4b5059;line-height:1.4}
+.ins-aviso{margin:4px 0 0;font-size:15px}
+.ins-p{display:flex;align-items:center;gap:14px;border:1px solid #ecebe7;border-radius:16px;padding:14px}
+.ins-n{flex:none;width:36px;height:36px;border-radius:50%;background:#16181c;color:#fff;font-weight:800;font-size:17px;display:flex;align-items:center;justify-content:center}
+.ins-p>div{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}.ins-p b{font-size:16px}.ins-p>div>span{font-size:14px;color:#5b6068;line-height:1.4}
+.ins-i{flex:none;width:46px;height:46px;border-radius:12px;background:#eef4ff;color:#1d6ae5;display:flex;align-items:center;justify-content:center}.ins-i svg{width:26px;height:26px}
+.ins-ja{width:100%;min-height:50px}
+.lg3-ins{margin-top:16px;display:inline-flex;align-items:center;gap:8px;border:1px solid #e4e4e0;background:#fff;color:#16181c;border-radius:999px;padding:11px 18px;font-weight:700;font-size:14.5px;cursor:pointer}
+.lg3-ins svg{width:18px;height:18px}
 </style>
 </head>
 <body>
@@ -2735,7 +2755,7 @@ function pgVisao() {
   const diasBkp = S.config.ultimoBackup ? difDias(S.config.ultimoBackup.slice(0, 10), hoje()) : null;
   const ativosN = S.contratos.filter(c => c.status === 'ativo').length;
   return `${cabecalho(`Olá, ${esc(nomeCurto(U.nome))}`, `${fmtComp(comp)} · hoje é ${fmtData(hoje())}`, `<a class="btn" href="#/mensal/${comp}?pend">${ic('check')} Ver pendências</a><a class="btn pri" href="#/cobrancas/${comp}">${ic('cash')} Registrar recebimento</a>`)}
-    ${(() => { let fechado = false; try { fechado = localStorage.getItem('altolar_instalar') === '1'; } catch { } const app = matchMedia('(display-mode: standalone)').matches || navigator.standalone; return fechado || app ? '' : `<div class="notice info small instalar row between" style="margin-bottom:14px"><span><b>Coloque o imovyn na tela de início:</b> ${/iPhone|iPad|Macintosh/.test(navigator.userAgent) && "ontouchend" in document ? '1. No Safari, toque em Compartilhar (quadrado com seta para cima). 2. Role e toque em "Adicionar à Tela de Início". 3. Toque em "Adicionar".' : '1. No Chrome, toque nos três pontinhos (⋮). 2. Toque em "Adicionar à tela inicial" ou "Instalar app". 3. Confirme.'} O ícone do imovyn aparece junto dos seus apps.</span><button class="btn sm" onclick="try{localStorage.setItem('altolar_instalar','1')}catch(e){};this.closest('.instalar').remove()">Entendi</button></div>`; })()}
+
     ${vazioTotal ? `<div class="card" style="margin-bottom:16px"><div class="card-b"><h3 style="margin-bottom:8px">Primeiros passos</h3><ol style="margin:0;padding-left:20px;line-height:2">
       <li><a href="#/proprietarios">Cadastre um proprietário</a> com os dados de repasse.</li><li><a href="#/imoveis">Cadastre o imóvel</a> e vincule ao proprietário.</li><li><a href="#/inquilinos">Cadastre o inquilino</a>.</li><li><a href="#/contratos">Crie o contrato</a> com aluguel, encargos e garantia.</li><li>No <a href="#/mensal">Controle mensal</a>, gere as cobranças e confira cada imóvel.</li></ol>
       <p class="small muted">Já tem uma planilha? Use <a href="#/config/importar">Configurações › Importar planilha</a>. Quer só conhecer? <a href="#/config/demo">Carregue os dados de demonstração</a>.</p></div></div>` : ''}
@@ -5176,8 +5196,8 @@ function nvPerguntarNovaImob(email, nome) {
       corpo: `<p style="margin-top:0">Não encontramos uma imobiliária com o e-mail <b>${esc(email)}</b>.</p>
         <div class="notice info small">Faz parte de uma equipe? Peça ao administrador para cadastrar este e-mail em Configurações › Usuários. Não crie outra conta.</div>
         <div class="fld c12" style="margin-top:14px"><label for="ni-n">Nome da sua imobiliária</label><input id="ni-n" placeholder="Ex.: Imobiliária Exemplo"></div>
-        <p class="small muted" style="margin:10px 0 0"><b>7 dias grátis</b> com tudo liberado. Depois, assine pelo Mercado Pago: cartão, débito ou Pix.</p>`,
-      rodape: `<button class="btn" data-close>Cancelar</button><button class="btn pri" id="ni-ok">Começar 7 dias grátis</button>` });
+        <p class="small muted" style="margin:10px 0 0"><b>7 dias grátis</b> com tudo liberado: no próximo passo você cadastra o cartão no Mercado Pago, e a 1ª cobrança só acontece depois do teste. Cancele antes e não paga nada.</p>`,
+      rodape: `<button class="btn" data-close>Cancelar</button><button class="btn pri" id="ni-ok">Continuar</button>` });
     $('#ni-ok', ov).onclick = () => { const n = $('#ni-n', ov).value.trim(); if (n.length < 2) { toast('Informe o nome da imobiliária.', 'warn'); return; } res(n); ov.fechar(); };
   });
 }
@@ -5199,7 +5219,7 @@ async function nvPosLogin(fu, nomeExtra) {
   await _salvarLocal();
   Nuvem.pronto = true; nvOuvir(); nvAgendar(200);
   await entrar(u);
-  if (primeiro) setTimeout(() => toast(r.imob ? `Conta da ${r.imob} criada. Você tem 7 dias grátis para testar tudo.` : 'Pronto: os dados agora ficam na nuvem e aparecem em qualquer aparelho em que você entrar.', 'ok'), 500);
+  if (primeiro) setTimeout(() => toast(r.imob ? `Conta da ${r.imob} criada. Agora cadastre o cartão para liberar os 7 dias grátis.` : 'Pronto: os dados agora ficam na nuvem e aparecem em qualquer aparelho em que você entrar.', 'ok'), 500);
   return u;
 }
 /* traz tudo da nuvem; se este aparelho nunca sincronizou e a nuvem já tem dados, a nuvem manda */
@@ -5250,7 +5270,7 @@ function nvOuvir() {
   for (const c of COLECOES) Nuvem.unsub.push(Nuvem.db.collection(nvCol(c)).onSnapshot(snap => { if (snap.metadata && snap.metadata.hasPendingWrites) return; let mudou = false; snap.docChanges().forEach(ch => { if (ch.type !== 'removed' && nvAplicarDoc(c, ch.doc.id, ch.doc.data())) mudou = true; }); if (mudou) depois(); }, e => { console.warn('nuvem', c, e); nvStatus('erro'); }));
   Nuvem.unsub.push(Nuvem.db.collection(nvPath('c__obj')).onSnapshot(snap => { if (snap.metadata && snap.metadata.hasPendingWrites) return; let mudou = false; snap.docChanges().forEach(ch => { if (ch.type !== 'removed' && nvAplicarObj(ch.doc.id, ch.doc.data())) mudou = true; }); if (mudou) depois(); }, e => console.warn('nuvem obj', e)));
 }
-function nvParar(soOuvir) { Nuvem.unsub.forEach(f => { try { f(); } catch { } }); Nuvem.unsub = []; if (!soOuvir) { Nuvem.pronto = false; clearTimeout(Nuvem.timer); if (Nuvem._assUnsub) { try { Nuvem._assUnsub(); } catch { } Nuvem._assUnsub = null; } Nuvem.assin = null; Nuvem.dono = null; } }
+function nvParar(soOuvir) { Nuvem.unsub.forEach(f => { try { f(); } catch { } }); Nuvem.unsub = []; if (!soOuvir) { Nuvem.pronto = false; clearTimeout(Nuvem.timer); if (Nuvem._assUnsub) { try { Nuvem._assUnsub(); } catch { } Nuvem._assUnsub = null; } Nuvem.assin = null; Nuvem.assinOk = false; Nuvem.dono = null; } }
 function nvRedesenhar() { if (!U) return; if (modalStack.length) { Nuvem.redesenhar = true; return; } montarShell(); rota(); }
 setInterval(() => { if (Nuvem.redesenhar && !modalStack.length) { Nuvem.redesenhar = false; nvRedesenhar(); } }, 1500);
 
@@ -6131,25 +6151,28 @@ const DIAS_TESTE = 7;
 const API_ASSINATURA = '/api/assinatura';
 const FIM_TESTE_FUNDADOR = '2026-11-27'; /* Alto Lar: 1 mês grátis para testes, depois assina como as outras */
 const assinaturaIsenta = () => !nuvemAtiva() || MODO_DEMO || !Nuvem.tid;
-function fimDoTeste() { if (Nuvem.tid === TID_PRINCIPAL) return FIM_TESTE_FUNDADOR; const c = (Nuvem.dono && (Nuvem.dono.criadoEm || Nuvem.dono.em)) || ''; return c ? addDias(c.slice(0, 10), DIAS_TESTE) : ''; }
+function fimDoTeste() { return Nuvem.tid === TID_PRINCIPAL ? FIM_TESTE_FUNDADOR : ''; }
+/* Teste grátis igual ao OrçaHub: só começa quando a imobiliária cadastra o cartão (a 1ª cobrança é no fim do teste).
+   Sem assinatura: trava e mostra "Começar 7 dias grátis". A Alto Lar tem o mês grátis combinado. */
 function situacaoAssinatura() {
   if (assinaturaIsenta()) return { liberado: true, tipo: 'isenta' };
   const h = hoje(), a = Nuvem.assin || {}, fim = fimDoTeste();
+  if (!Nuvem.assinOk || !Nuvem.dono) return { liberado: true, tipo: 'carregando' };
+  if (a.status === 'teste' && a.validoAte && a.validoAte >= h) { const c = a.cobrancaEm || a.validoAte; return { liberado: true, tipo: 'teste', cartao: true, ate: c, dias: Math.max(0, difDias(h, c)), a }; }
   if (a.validoAte && a.validoAte >= h && ['ativa', 'pendente', 'atrasada', 'cancelada'].includes(a.status)) return { liberado: true, tipo: a.status, ate: a.validoAte, a };
   if (fim && h <= fim) return { liberado: true, tipo: 'teste', ate: fim, dias: Math.max(0, difDias(h, fim)), a };
-  if (!Nuvem.dono) return { liberado: true, tipo: 'carregando' };
-  return { liberado: false, tipo: a.status === 'cancelada' ? 'cancelada' : a.validoAte ? 'vencida' : 'teste_fim', a };
+  return { liberado: false, tipo: a.status === 'cancelada' ? 'cancelada' : a.validoAte ? 'vencida' : a.trialUsado ? 'teste_fim' : 'sem', a };
 }
 function nvOuvirAssinatura() {
   if (assinaturaIsenta() || !Nuvem.db) return;
   if (Nuvem._assUnsub) { try { Nuvem._assUnsub(); } catch { } }
   Nuvem._assUnsub = Nuvem.db.doc('assinaturas/' + Nuvem.tid).onSnapshot(d => {
     const antes = situacaoAssinatura().liberado;
-    Nuvem.assin = d.exists ? d.data() : null;
+    Nuvem.assin = d.exists ? d.data() : null; Nuvem.assinOk = true;
     const agora = situacaoAssinatura();
     if (agora.liberado !== antes || /assinatura/.test(location.hash)) nvRedesenhar();
     if (agora.liberado && !antes) toast('Pagamento confirmado. Tudo liberado!', 'ok');
-  }, e => console.warn('assinatura', e));
+  }, e => { console.warn('assinatura', e); Nuvem.assinOk = true; nvRedesenhar(); });
 }
 
 /* ---------- trava e aviso no topo ---------- */
@@ -6162,7 +6185,7 @@ function nvOuvirAssinatura() {
     _rota();
     const el = $('#content'); if (!el || st.tipo === 'isenta' || st.tipo === 'carregando') return;
     let aviso = '';
-    if (st.tipo === 'teste') aviso = `<div class="ass-faixa"><span><b>${st.dias === 0 ? 'Último dia' : st.dias + (st.dias === 1 ? ' dia grátis' : ' dias grátis')}</b> para testar tudo.</span><a class="btn sm pri" href="#/assinatura">Assinar agora</a></div>`;
+    if (st.tipo === 'teste') aviso = st.cartao ? `<div class="ass-faixa"><span><b>${st.dias === 0 ? 'Último dia grátis' : st.dias + (st.dias === 1 ? ' dia grátis' : ' dias grátis')}.</b> A 1ª cobrança no cartão é em ${fmtData(st.ate)}.</span><a class="btn sm" href="#/assinatura">Ver assinatura</a></div>` : `<div class="ass-faixa"><span><b>${st.dias === 0 ? 'Último dia grátis' : st.dias + (st.dias === 1 ? ' dia grátis' : ' dias grátis')}</b> para testar tudo.</span><a class="btn sm pri" href="#/assinatura">Assinar agora</a></div>`;
     else if (st.tipo === 'atrasada') aviso = `<div class="ass-faixa bad"><span><b>Pagamento em atraso.</b> O acesso vale até ${fmtData(st.ate)}.</span><a class="btn sm" href="${esc(st.a.linkPagamento || '#/assinatura')}" ${st.a.linkPagamento ? 'target="_blank" rel="noopener"' : ''}>Pagar agora</a></div>`;
     else if (st.tipo === 'cancelada') aviso = `<div class="ass-faixa"><span>Assinatura cancelada. O acesso vale até <b>${fmtData(st.ate)}</b>.</span><a class="btn sm" href="#/assinatura">Assinar de novo</a></div>`;
     else if (st.tipo === 'ativa' && st.a.forma === 'pix' && difDias(hoje(), st.ate) <= 5) aviso = `<div class="ass-faixa"><span>Seu período pago termina em <b>${fmtData(st.ate)}</b>.</span><a class="btn sm pri" href="#/assinatura">Renovar</a></div>`;
@@ -6175,22 +6198,27 @@ function nvOuvirAssinatura() {
 function pgAssinatura() {
   if (assinaturaIsenta()) return `${cabecalho('Assinatura', '')}<div class="card"><div class="card-b">Esta conta não precisa de assinatura.</div></div>`;
   const st = situacaoAssinatura(), a = st.a || Nuvem.assin || {}, admin = U && U.papel === 'admin';
-  const titulo = { teste: `Você está no teste grátis: ${st.dias === 0 ? 'hoje é o último dia' : 'faltam ' + st.dias + (st.dias === 1 ? ' dia' : ' dias')}`, ativa: 'Assinatura ativa', pendente: 'Pagamento em análise', atrasada: 'Pagamento em atraso', cancelada: 'Assinatura cancelada', vencida: 'Seu período pago terminou', teste_fim: 'O teste grátis terminou' }[st.tipo] || 'Assinatura';
-  const bloqueio = !st.liberado ? `<div class="notice bad" style="margin-bottom:16px"><b>O sistema está travado.</b> Seus dados continuam guardados e voltam assim que o pagamento for confirmado. Enquanto isso, só esta tela e Configurações abrem.</div>` : '';
+  const podeTeste = !a.trialUsado && Nuvem.tid !== TID_PRINCIPAL;
+  const fmtDias = n => n === 0 ? 'hoje é o último dia' : 'faltam ' + n + (n === 1 ? ' dia' : ' dias');
+  const titulo = { sem: `Comece seus ${DIAS_TESTE} dias grátis`, teste: st.cartao ? `Teste grátis: ${fmtDias(st.dias)}` : `Período grátis: ${fmtDias(st.dias)}`, ativa: 'Assinatura ativa', pendente: 'Pagamento em análise', atrasada: 'Pagamento em atraso', cancelada: 'Assinatura cancelada', vencida: 'Seu período pago terminou', teste_fim: 'O teste grátis terminou' }[st.tipo] || 'Assinatura';
+  const bloqueio = !st.liberado ? (st.tipo === 'sem'
+    ? `<div class="notice info" style="margin-bottom:16px"><b>Falta só um passo para começar.</b> Cadastre o cartão e use tudo grátis por ${DIAS_TESTE} dias. A 1ª cobrança só acontece depois do teste. Se cancelar antes, não paga nada.</div>`
+    : `<div class="notice bad" style="margin-bottom:16px"><b>O sistema está travado.</b> Seus dados continuam guardados e voltam assim que o pagamento for confirmado. Enquanto isso, só esta tela e Configurações abrem.</div>`) : '';
   const pl = (k, p) => { const mes = p.valor / p.meses, eco = k === 'anual' ? PLANOS_IMOVYN.mensal.valor * 12 - p.valor : 0;
     return `<div class="ass-pl ${k === 'anual' ? 'destaque' : ''}">${k === 'anual' ? '<span class="ass-sel">Mais econômico</span>' : ''}<b>${p.nome}</b>
       <div class="ass-v">${brl(p.valor)}<small>/${k === 'anual' ? 'ano' : 'mês'}</small></div>
       <span class="small muted">${k === 'anual' ? `equivale a ${brl(mes)} por mês · economia de ${brl(eco)}` : 'cobrado todo mês'}</span>
-      ${admin ? `<button class="btn pri" data-act="assinar" data-plano="${k}" data-forma="cartao">${ic('cash')} Cartão de crédito</button><button class="btn" data-act="assinar" data-plano="${k}" data-forma="avulso">${ic('pix')} Pix ou débito</button>` : ''}</div>`; };
+      ${admin ? `<button class="btn pri" data-act="assinar" data-plano="${k}" data-forma="cartao">${ic('cash')} ${podeTeste ? `Começar ${DIAS_TESTE} dias grátis` : 'Cartão de crédito'}</button>${podeTeste ? `<span class="xs muted" style="margin-top:-4px">No cartão de crédito. 1ª cobrança depois de ${DIAS_TESTE} dias.</span>` : ''}<button class="btn" data-act="assinar" data-plano="${k}" data-forma="avulso">${ic('pix')} Pix ou débito${podeTeste ? ' (sem teste grátis)' : ''}</button>` : ''}</div>`; };
+  const linhaAte = st.tipo === 'teste' && st.cartao ? ['1ª cobrança no cartão', fmtData(st.ate)] : [st.tipo === 'teste' ? 'Grátis até' : 'Acesso liberado até', st.ate ? fmtData(st.ate) : '-'];
   return `${cabecalho('Assinatura', 'Plano do imovyn para a sua imobiliária. Pagamento seguro pelo Mercado Pago.')}${bloqueio}
-    <div class="card"><div class="card-h"><h3>${esc(titulo)}</h3>${pill(st.liberado ? (st.tipo === 'atrasada' ? 'vencido' : 'pago') : 'vencido', st.liberado ? 'Liberado' : 'Travado')}</div><div class="card-b">
-      ${dl([['Situação', esc(titulo)], ['Plano', a.plano ? (PLANOS_IMOVYN[a.plano]?.nome || a.plano) : 'Teste grátis'], ['Forma de pagamento', a.forma === 'cartao' ? 'Cartão de crédito (renova sozinho)' : a.forma === 'pix' ? 'Pix ou débito (paga por período)' : '-'], [st.tipo === 'teste' ? 'Teste grátis até' : 'Acesso liberado até', st.ate ? fmtData(st.ate) : '-']])}
-      ${a.linkPagamento && st.tipo !== 'ativa' ? `<a class="btn ok" style="margin-top:14px" href="${esc(a.linkPagamento)}" target="_blank" rel="noopener">Concluir pagamento no Mercado Pago</a>` : ''}
+    <div class="card"><div class="card-h"><h3>${esc(titulo)}</h3>${pill(st.liberado ? (st.tipo === 'atrasada' ? 'vencido' : 'pago') : (st.tipo === 'sem' ? 'pendente' : 'vencido'), st.liberado ? 'Liberado' : (st.tipo === 'sem' ? 'Falta o cartão' : 'Travado'))}</div><div class="card-b">
+      ${dl([['Situação', esc(titulo)], ['Plano', a.plano ? (PLANOS_IMOVYN[a.plano]?.nome || a.plano) : '-'], ['Forma de pagamento', a.forma === 'cartao' ? 'Cartão de crédito (renova sozinho)' : a.forma === 'pix' ? 'Pix ou débito (paga por período)' : '-'], linhaAte])}
+      ${a.linkPagamento && !['ativa', 'teste'].includes(st.tipo) ? `<a class="btn ok" style="margin-top:14px" href="${esc(a.linkPagamento)}" target="_blank" rel="noopener">Concluir no Mercado Pago</a>` : ''}
       ${!admin ? '<p class="small muted" style="margin-bottom:0">Só o administrador da imobiliária pode assinar ou cancelar.</p>' : ''}</div></div>
     <h3 style="margin:22px 0 10px">Escolha o plano</h3>
     <div class="ass-pls">${pl('mensal', PLANOS_IMOVYN.mensal)}${pl('anual', PLANOS_IMOVYN.anual)}</div>
-    <p class="small muted">Cartão de crédito: a cobrança renova sozinha a cada período e pode ser cancelada quando quiser. Pix ou débito: você paga um período por vez. Se pagar antes de vencer, os dias se somam.</p>
-    ${admin && a.mpAssinatura && a.status !== 'cancelada' ? `<button class="btn danger" data-act="cancelarAssinatura" style="margin-top:6px">Cancelar renovação automática</button>` : ''}
+    <p class="small muted">${podeTeste ? `Teste grátis: você cadastra o cartão no Mercado Pago e usa tudo por ${DIAS_TESTE} dias. A cobrança só começa depois. Pode cancelar aqui mesmo antes disso, sem pagar nada. ` : ''}Cartão de crédito: renova sozinho a cada período. Pix ou débito: você paga um período por vez e, se pagar antes de vencer, os dias se somam.</p>
+    ${admin && a.mpAssinatura && a.status !== 'cancelada' ? `<button class="btn danger" data-act="cancelarAssinatura" style="margin-top:6px">${st.tipo === 'teste' && st.cartao ? 'Cancelar o teste (não será cobrado)' : 'Cancelar renovação automática'}</button>` : ''}
     ${(a.historico || []).length ? `<div class="card" style="margin-top:18px"><div class="card-h"><h3>Pagamentos</h3></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Data</th><th class="num">Valor</th><th>Situação</th></tr></thead><tbody>${a.historico.map(h => `<tr><td>${fmtData(h.vencimento)}</td><td class="num">${brl(h.valor || 0)}</td><td>${h.evento === 'PAYMENT_RECEIVED' ? pill('pago', 'Pago') : h.evento === 'PAYMENT_OVERDUE' ? pill('vencido', 'Recusado') : pill('pendente', 'Aguardando')}</td></tr>`).join('')}</tbody></table></div></div>` : ''}`;
 }
 async function chamarApiAssinatura(corpo) {
@@ -6207,11 +6235,68 @@ ACT.assinar = async ({ plano, forma }, el) => {
   catch (e) { toast(e.message, 'err'); b.disabled = false; b.innerHTML = txt; }
 };
 ACT.cancelarAssinatura = async () => {
-  if (!(await confirmar('Cancelar a renovação automática? Você continua usando até o fim do período já pago.', { ok: 'Cancelar renovação', perigo: true }))) return;
+  const noTeste = (Nuvem.assin || {}).status === 'teste'; if (!(await confirmar(noTeste ? 'Cancelar o teste grátis? Você continua usando até o fim do teste e não será cobrado.' : 'Cancelar a renovação automática? Você continua usando até o fim do período já pago.', { ok: noTeste ? 'Cancelar teste' : 'Cancelar renovação', perigo: true }))) return;
   try { await chamarApiAssinatura({ acao: 'cancelar' }); toast('Renovação cancelada.', 'ok'); } catch (e) { toast(e.message, 'err'); }
 };
 /* volta do Mercado Pago */
 if (/[?&]assinatura=ok/.test(location.search)) { history.replaceState(null, '', location.pathname + '#/assinatura'); setTimeout(() => toast('Recebemos o retorno do Mercado Pago. A liberação acontece assim que o pagamento for confirmado.', 'ok'), 1500); }
+/* =====================================================================
+   COLOCAR O APP NA TELA DE INÍCIO (passo a passo bem simples)
+   - Faixa fixa embaixo da tela no celular/iPad até a pessoa instalar ou fechar.
+   - Item "Instalar o app" no menu, sempre disponível enquanto não estiver instalado.
+   - Link na tela de entrar.
+   ===================================================================== */
+Object.assign(ICONS, {
+  compart: '<path d="M12 3v12M8 7l4-4 4 4"/><path d="M6 11H5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-1"/>',
+  addq: '<rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/>',
+  pontos: '<circle cx="12" cy="5" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="19" r="1.6" fill="currentColor"/>',
+  celular: '<rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/>'
+});
+const appInstalado = () => { try { return matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; } catch { return false; } };
+const ehApple = () => /iPhone|iPad|iPod/.test(navigator.userAgent) || (/Macintosh/.test(navigator.userAgent) && 'ontouchend' in document);
+const ehCelular = () => ehApple() || /Android|Mobile/.test(navigator.userAgent);
+let _pedidoInstalar = null;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); _pedidoInstalar = e; });
+
+function guiaInstalar() {
+  const passo = (n, ico, t, d) => `<div class="ins-p"><span class="ins-n">${n}</span><div><b>${t}</b><span>${d}</span></div><span class="ins-i">${ic(ico)}</span></div>`;
+  const apple = ehApple();
+  const corpo = `<div class="ins">
+    <div class="ins-top"><div class="ins-app">${marcaSVG(54, 'claro')}</div><div><b>Use o imovyn como um aplicativo</b><span>O ícone fica na tela do seu ${apple ? 'iPhone ou iPad' : 'celular'}, junto dos outros apps. É só tocar e abrir.</span></div></div>
+    ${apple ? `<p class="ins-aviso">Faça pelo <b>Safari</b>, o navegador da bússola azul.</p>
+      ${passo(1, 'compart', 'Toque em Compartilhar', 'É o quadradinho com uma seta para cima. No iPhone fica embaixo da tela. No iPad fica em cima, ao lado do endereço.')}
+      ${passo(2, 'addq', 'Toque em "Adicionar à Tela de Início"', 'Se não aparecer, arraste a lista para cima até encontrar.')}
+      ${passo(3, 'ok', 'Toque em "Adicionar"', 'Pronto! O ícone do imovyn aparece na tela do aparelho.')}`
+    : `<p class="ins-aviso">Faça pelo <b>Google Chrome</b>.</p>
+      ${_pedidoInstalar ? `<button class="btn pri ins-ja" id="ins-ja">${ic('down')} Instalar agora</button><p class="small muted" style="text-align:center;margin:6px 0 12px">Ou faça do jeito abaixo:</p>` : ''}
+      ${passo(1, 'pontos', 'Toque nos três pontinhos', 'Ficam no canto de cima, do lado direito.')}
+      ${passo(2, 'addq', 'Toque em "Adicionar à tela inicial"', 'Em alguns celulares o nome é "Instalar app".')}
+      ${passo(3, 'ok', 'Toque em "Adicionar" ou "Instalar"', 'Pronto! O ícone do imovyn aparece na tela do celular.')}`}
+    <p class="small muted" style="margin:14px 0 0;text-align:center">Depois disso, abra sempre pelo ícone. Seus dados continuam os mesmos.</p></div>`;
+  const ov = modal({ titulo: 'Colocar na tela de início', tam: 'sm', corpo, rodape: `<button class="btn pri" data-close style="min-width:140px">Entendi</button>` });
+  const ja = $('#ins-ja', ov); if (ja) ja.onclick = async () => { try { _pedidoInstalar.prompt(); await _pedidoInstalar.userChoice; } catch { } _pedidoInstalar = null; ov.querySelector('[data-close]').click(); };
+}
+ACT.instalarApp = () => guiaInstalar();
+
+function faixaInstalar() {
+  const el = $('#ins-faixa');
+  let fechado = false; try { fechado = localStorage.getItem('imovyn_ins_fechado') === '1'; } catch { }
+  if (!U || appInstalado() || !ehCelular() || fechado || MODO_DEMO || catEhPublico()) { if (el) el.remove(); return; }
+  if (el) return;
+  const f = document.createElement('div'); f.id = 'ins-faixa';
+  f.innerHTML = `<span class="ins-f-i">${marcaSVG(30, 'claro')}</span><span class="ins-f-t"><b>Coloque o imovyn na tela do celular</b><small>Fica igual a um aplicativo</small></span><button class="btn sm pri" type="button" data-ins>Ver como</button><button class="ins-f-x" type="button" aria-label="Fechar">✕</button>`;
+  document.body.appendChild(f);
+  f.querySelector('[data-ins]').onclick = guiaInstalar;
+  f.querySelector('.ins-f-x').onclick = () => { try { localStorage.setItem('imovyn_ins_fechado', '1'); } catch { } f.remove(); toast('Quando quiser, está no menu: "Colocar na tela de início".'); };
+}
+{
+  const _rota = rota;
+  rota = function () { _rota(); try { faixaInstalar(); } catch { } };
+  const _nav = navHTML;
+  navHTML = function (atual) { return _nav(atual) + (appInstalado() ? '' : `<a href="javascript:void 0" data-act="instalarApp">${ic('celular')}<span>Colocar na tela de início</span></a>`); };
+  const _shell = shellLogin;
+  shellLogin = function (form) { _shell(form); if (appInstalado()) return; const b = $('.lg3 .login-box'); if (b) b.insertAdjacentHTML('afterend', `<button type="button" class="lg3-ins" data-act="instalarApp">${ic('celular')} Como colocar o imovyn na tela do celular</button>`); const x = $('.lg3-ins'); if (x) x.onclick = guiaInstalar; };
+}
 /* =====================================================================
    Relatórios, configurações, integrações, importação, backup, demonstração
    ===================================================================== */
