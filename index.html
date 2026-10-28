@@ -1270,8 +1270,17 @@ body:has(.ov) #ins-faixa{display:none}
 .ass-per{display:inline-flex;background:#f1f1ee;border-radius:999px;padding:4px;gap:4px;margin:0 0 14px;flex-wrap:wrap}
 .ass-per button{border:0;background:transparent;border-radius:999px;padding:10px 18px;font-weight:700;font-size:14.5px;color:#5b6068;cursor:pointer;font-family:inherit}
 .ass-per button.on{background:#fff;color:#16181c;box-shadow:0 2px 8px rgba(0,0,0,.08)}.ass-per small{color:#23874f;font-weight:800;margin-left:4px}
-.ass-pls.t3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))!important}
+.ass-pls.t2{grid-template-columns:repeat(2,minmax(0,1fr))!important;max-width:820px}@media (max-width:700px){.ass-pls.t2{grid-template-columns:minmax(0,1fr)!important}}
 .ass-it{list-style:none;padding:0;margin:4px 0 6px;display:flex;flex-direction:column;gap:6px;font-size:14px}.ass-it li::before{content:"✓";color:#23874f;font-weight:800;margin-right:8px}
+.ass-pls.t2{align-items:stretch}
+.ass-pls.t2 .ass-pl{gap:8px;padding:24px 20px 20px}
+.ass-pls.t2 .ass-pl.destaque{border:1px solid #111316;box-shadow:0 0 0 1px #111316,0 14px 34px rgba(17,19,22,.12)}
+.ass-pl-h{display:flex;flex-direction:column;gap:4px;min-height:72px}.ass-pl-h b{font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:#6b7079}
+.ass-pl-s{min-height:20px}
+.ass-pl-f{margin-top:auto;display:flex;flex-direction:column;gap:10px;padding-top:8px}
+.ass-pl-f .btn{white-space:nowrap}
+.ass-pls.t2 .ass-it li{font-size:13.5px;line-height:1.35;padding-left:20px;text-indent:-20px}
+@media (max-width:700px){.ass-pl-h{min-height:0}}
 </style>
 </head>
 <body>
@@ -6152,9 +6161,8 @@ function catImovelHTML(id) {
      Os dados continuam guardados.
    ===================================================================== */
 const NIVEIS_IMOVYN = {
-  essencial: { nome: 'Essencial', mes: 229.9, usuarios: 3, txt: 'Para o corretor ou a imobiliária pequena' },
-  profissional: { nome: 'Profissional', mes: 379.9, usuarios: 10, txt: 'Para a imobiliária com equipe' },
-  imobiliaria: { nome: 'Imobiliária', mes: 597.9, usuarios: 0, txt: 'Para a imobiliária grande, sem limite' } };
+  essencial: { nome: 'Essencial', mes: 229.9, usuarios: 5, txt: 'Para quem trabalha sozinho ou com equipe pequena: de 1 a 5 pessoas' },
+  equipe: { nome: 'Equipe', mes: 379.9, usuarios: 0, txt: 'Para imobiliárias com 6 ou mais pessoas, sem limite' } };
 const PLANOS_IMOVYN = (() => { const o = { mensal: { nome: 'Mensal', valor: 229.9, meses: 1 }, anual: { nome: 'Anual', valor: 1890, meses: 12 } };
   for (const [k, n] of Object.entries(NIVEIS_IMOVYN)) { o[k + '_mensal'] = { nome: n.nome + ' mensal', valor: n.mes, meses: 1, nivel: k }; o[k + '_anual'] = { nome: n.nome + ' anual', valor: Math.round(n.mes * 1000) / 100, meses: 12, nivel: k }; }
   return o; })();
@@ -6185,10 +6193,10 @@ function nvOuvirAssinatura() {
   if (assinaturaIsenta() || !Nuvem.db) return;
   if (Nuvem._assUnsub) { try { Nuvem._assUnsub(); } catch { } }
   Nuvem._assUnsub = Nuvem.db.doc('assinaturas/' + Nuvem.tid).onSnapshot(d => {
-    const antes = situacaoAssinatura().liberado;
+    const st0 = situacaoAssinatura(), antes = st0.liberado;
     Nuvem.assin = d.exists ? d.data() : null; Nuvem.assinOk = true;
     const agora = situacaoAssinatura();
-    if (agora.liberado !== antes || /assinatura/.test(location.hash)) nvRedesenhar();
+    if (agora.liberado !== antes || agora.tipo !== st0.tipo || /assinatura/.test(location.hash)) nvRedesenhar();
     if (agora.liberado && !antes) toast('Pagamento confirmado. Tudo liberado!', 'ok');
   }, e => { console.warn('assinatura', e); Nuvem.assinOk = true; nvRedesenhar(); });
 }
@@ -6224,12 +6232,13 @@ function pgAssinatura() {
     : `<div class="notice bad" style="margin-bottom:16px"><b>O sistema está travado.</b> Seus dados continuam guardados e voltam assim que o pagamento for confirmado. Enquanto isso, só esta tela e Configurações abrem.</div>`) : '';
   const per = Nuvem._assPer || 'mensal';
   const pl = (nv) => { const n = NIVEIS_IMOVYN[nv], k = nv + '_' + per, p = PLANOS_IMOVYN[k], atual = a.plano === k;
-    return `<div class="ass-pl ${nv === 'profissional' ? 'destaque' : ''}">${nv === 'profissional' ? '<span class="ass-sel">Mais escolhido</span>' : ''}<b>${n.nome}</b><span class="small muted">${n.txt}</span>
+    return `<div class="ass-pl ${nv === 'equipe' ? 'destaque' : ''}">${nv === 'equipe' ? '<span class="ass-sel">Para equipes</span>' : ''}
+      <div class="ass-pl-h"><b>${n.nome}</b><span class="small muted">${n.txt}</span></div>
       <div class="ass-v">${brl(p.valor)}<small>/${per === 'anual' ? 'ano' : 'mês'}</small></div>
-      <span class="small muted">${per === 'anual' ? `equivale a ${brl(p.valor / 12)} por mês · 2 meses grátis` : 'cobrado todo mês'}</span>
-      <ul class="ass-it"><li>${n.usuarios ? `Até <b>${n.usuarios} usuários</b>` : '<b>Usuários à vontade</b>'}</li><li>Controle de aluguel, contratos e clientes</li><li>Site de imóveis com WhatsApp</li><li>Imóveis e lançamentos sem limite</li></ul>
-      ${atual ? '<span class="pill pago" style="align-self:flex-start">Seu plano</span>' : ''}
-      ${admin && !atual ? `<button class="btn pri" data-act="assinar" data-plano="${k}" data-forma="cartao">${ic('cash')} ${podeTeste ? `Começar ${DIAS_TESTE} dias grátis` : 'Cartão de crédito'}</button>${podeTeste ? `<span class="xs muted" style="margin-top:-4px">No cartão de crédito. 1ª cobrança depois de ${DIAS_TESTE} dias.</span>` : ''}<button class="btn" data-act="assinar" data-plano="${k}" data-forma="avulso">${ic('pix')} Pix ou débito${podeTeste ? ' (sem teste grátis)' : ''}</button>` : ''}</div>`; };
+      <span class="small muted ass-pl-s">${per === 'anual' ? `equivale a ${brl(p.valor / 12)} por mês` : 'cobrado todo mês'}</span>
+      <ul class="ass-it"><li>${n.usuarios ? `De <b>1 a ${n.usuarios} usuários</b>` : '<b>6 ou mais usuários, sem limite</b>'}</li><li>Controle de aluguel e contratos</li><li>Site de imóveis com WhatsApp</li><li>Imóveis sem limite</li></ul>
+      <div class="ass-pl-f">${atual ? '<span class="pill pago" style="align-self:center">Seu plano</span>' : ''}
+      ${admin && !atual ? `<button class="btn pri" data-act="assinar" data-plano="${k}" data-forma="cartao">${podeTeste ? `Começar ${DIAS_TESTE} dias grátis` : 'Assinar no cartão'}</button><button class="btn" data-act="assinar" data-plano="${k}" data-forma="avulso">Pix ou débito</button>` : ''}</div></div>`; };
   const linhaAte = st.tipo === 'teste' && st.cartao ? ['1ª cobrança no cartão', fmtData(st.ate)] : [st.tipo === 'teste' ? 'Grátis até' : 'Acesso liberado até', st.ate ? fmtData(st.ate) : '-'];
   return `${cabecalho('Assinatura', 'Plano do imovyn para a sua imobiliária. Pagamento seguro pelo Mercado Pago.')}${bloqueio}
     <div class="card"><div class="card-h"><h3>${esc(titulo)}</h3>${pill(st.liberado ? (st.tipo === 'atrasada' ? 'vencido' : 'pago') : (st.tipo === 'sem' ? 'pendente' : 'vencido'), st.liberado ? 'Liberado' : (st.tipo === 'sem' ? 'Falta o cartão' : 'Travado'))}</div><div class="card-b">
@@ -6238,9 +6247,9 @@ function pgAssinatura() {
       ${!admin ? '<p class="small muted" style="margin-bottom:0">Só o administrador da imobiliária pode assinar ou cancelar.</p>' : ''}</div></div>
     <h3 style="margin:22px 0 10px">Escolha o plano</h3>
     <div class="ass-per"><button type="button" class="${per === 'mensal' ? 'on' : ''}" data-act="assPer" data-p="mensal">Pagar por mês</button><button type="button" class="${per === 'anual' ? 'on' : ''}" data-act="assPer" data-p="anual">Pagar por ano <small>2 meses grátis</small></button></div>
-    <div class="ass-pls t3">${pl('essencial')}${pl('profissional')}${pl('imobiliaria')}</div>
+    <div class="ass-pls t2">${pl('essencial')}${pl('equipe')}</div>
     ${limiteUsuarios() && usuariosAtivos() > limiteUsuarios() ? `<div class="notice warn" style="margin-top:12px">Sua equipe tem ${usuariosAtivos()} usuários e o seu plano permite ${limiteUsuarios()}. Escolha um plano maior para cadastrar mais pessoas.</div>` : ''}
-    <p class="small muted">${podeTeste ? `Teste grátis: você cadastra o cartão no Mercado Pago e usa tudo por ${DIAS_TESTE} dias. A cobrança só começa depois. Pode cancelar aqui mesmo antes disso, sem pagar nada. ` : ''}Cartão de crédito: renova sozinho a cada período. Pix ou débito: você paga um período por vez e, se pagar antes de vencer, os dias se somam.</p>
+    <p class="small muted">${podeTeste ? `<b>Começar ${DIAS_TESTE} dias grátis:</b> você cadastra o cartão de crédito no Mercado Pago e usa tudo por ${DIAS_TESTE} dias. A cobrança só começa depois. Pode cancelar aqui mesmo antes disso, sem pagar nada. Pix ou débito não tem teste grátis. ` : ''}Cartão de crédito: renova sozinho a cada período. Pix ou débito: você paga um período por vez e, se pagar antes de vencer, os dias se somam.</p>
     ${admin && a.mpAssinatura && a.status !== 'cancelada' ? `<button class="btn danger" data-act="cancelarAssinatura" style="margin-top:6px">${st.tipo === 'teste' && st.cartao ? 'Cancelar o teste (não será cobrado)' : 'Cancelar renovação automática'}</button>` : ''}
     ${(a.historico || []).length ? `<div class="card" style="margin-top:18px"><div class="card-h"><h3>Pagamentos</h3></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Data</th><th class="num">Valor</th><th>Situação</th></tr></thead><tbody>${a.historico.map(h => `<tr><td>${fmtData(h.vencimento)}</td><td class="num">${brl(h.valor || 0)}</td><td>${h.evento === 'PAYMENT_RECEIVED' ? pill('pago', 'Pago') : h.evento === 'PAYMENT_OVERDUE' ? pill('vencido', 'Recusado') : pill('pendente', 'Aguardando')}</td></tr>`).join('')}</tbody></table></div></div>` : ''}`;
 }
