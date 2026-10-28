@@ -1350,7 +1350,7 @@ html.escuro body:not(.cat-on) hr{border-color:#2b2e34}
 html.escuro body:not(.cat-on) a{color:#9cc1ff}html.escuro body:not(.cat-on) .nav a,html.escuro body:not(.cat-on) .btn,html.escuro body:not(.cat-on) .tabbar a{text-decoration:none}
 html.escuro body:not(.cat-on) .month-sel,html.escuro body:not(.cat-on) .sec-t{color:#eceef1}
 html.escuro body:not(.cat-on) .side-foot .btn{color:#ddd!important}
-html.escuro body:not(.cat-on) .tema-btn svg{color:#f3d48a}
+
 .tema-btn{border:1px solid var(--line);cursor:pointer}
 html.escuro body:not(.cat-on) .demo-flag{background:#1f2226!important;border-color:#33373e!important;color:#c7cbd1!important}
 html.escuro body:not(.cat-on) .tabs a,html.escuro body:not(.cat-on) .tabs button{color:#9aa0a8!important}html.escuro body:not(.cat-on) .tabs .on,html.escuro body:not(.cat-on) .tabs button.on,html.escuro body:not(.cat-on) .tabs a.on{color:#fff!important;border-bottom-color:#b89b63!important}
@@ -1391,6 +1391,55 @@ html.escuro body:not(.cat-on) .dica{background:#f3f4f6;color:#16181c}html.escuro
 .ov:has(.tut) .modal-f{display:flex;align-items:center;justify-content:space-between}
 html.escuro body:not(.cat-on) .tut-t{color:#c7cbd1}html.escuro body:not(.cat-on) .tut-ic{background:#f3f4f6}html.escuro body:not(.cat-on) .tut-dots i.on{background:#fff}
 .ov:has(.tut) .modal-f{flex-direction:row!important;flex-wrap:nowrap!important;gap:10px}.ov:has(.tut) .modal-f .btn{width:auto!important;flex:none!important;min-width:110px}
+/* aparelhos conectados */
+.ap-lista{display:flex;flex-direction:column;gap:10px}
+.ap-it{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.ap-ico{flex:none;width:40px;height:40px;border-radius:12px;background:var(--g50);display:flex;align-items:center;justify-content:center}.ap-ico svg{width:22px;height:22px}
+.ap-it>div{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.ap-it>div b{font-size:15px}.ap-it>div span{font-size:13.5px;color:var(--muted)}.ap-it>div small{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis}
+.ap-it .btn,.ap-it .pill{flex:none}
+@media (max-width:600px){.ap-it{flex-wrap:wrap}.ap-it .btn{width:100%}}
+/* botão claro/escuro: chave com sol e lua */
+.tema-btn{position:relative;flex:none;width:68px;height:38px;border-radius:999px;border:1px solid var(--line)!important;background:#eef0f3!important;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:space-between}
+.tema-btn .tt-ic{position:relative;z-index:2;width:34px;height:36px;display:flex;align-items:center;justify-content:center;transition:color .25s}
+.tema-btn .tt-ic svg{width:17px;height:17px}
+.tema-btn .sol{color:#b07d12}.tema-btn .lua{color:#8a9099}
+.tema-btn .tt-knob{position:absolute;z-index:1;top:3px;left:3px;width:30px;height:30px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(17,19,22,.18);transition:transform .25s cubic-bezier(.4,0,.2,1)}
+.tema-btn.on .tt-knob{transform:translateX(30px);background:#2b2f35}
+.tema-btn.on .lua{color:#f3d48a}.tema-btn.on .sol{color:#6f757e}
+html.escuro body:not(.cat-on) .tema-btn{background:#16181b!important;border-color:#2b2e34!important}
+html.escuro body:not(.cat-on) .tema-btn svg{color:inherit!important}
+/* logo enviado pela imobiliária: limpo, sem moldura */
+.brand img:not(.logo-round){border-radius:12px;box-shadow:none!important;background:transparent}
+.logo-prev{background:#fff!important;border:1px solid var(--line)}
+.logo-prev .mv-logo b,.logo-prev .brand-t b{color:#16181c!important}.logo-prev .brand-t span{color:#8a8f98!important}
+.logo-prev .mv-logo svg{background:transparent;padding:0}
+html.escuro body:not(.cat-on) .logo-prev{background:#16181b!important;border-color:#2b2e34}
+html.escuro body:not(.cat-on) .logo-prev .mv-logo b,html.escuro body:not(.cat-on) .logo-prev .brand-t b{color:#fff!important}
+html.escuro body:not(.cat-on) .logo-prev .mv-logo svg{background:#f3f4f6;border-radius:10px;padding:3px}
+/* anunciar imóvel */
+.an-cta{width:100%;margin-top:16px;display:flex;align-items:center;gap:16px;text-align:left;background:#16181c;color:#fff;border:0;border-radius:18px;padding:18px 20px;cursor:pointer;font-family:inherit;box-shadow:0 12px 28px rgba(17,19,22,.18)}
+.an-cta>svg{flex:none;width:44px;height:44px;padding:10px;border-radius:14px;background:#fff;color:#16181c;box-sizing:border-box}
+.an-cta span{display:flex;flex-direction:column;gap:3px}.an-cta b{font-size:18px;color:#fff}.an-cta small{font-size:14px;color:#c9ccd1}
+html.escuro body:not(.cat-on) .an-cta{background:#f3f4f6}html.escuro body:not(.cat-on) .an-cta b{color:#16181c}html.escuro body:not(.cat-on) .an-cta small{color:#4b5059}html.escuro body:not(.cat-on) .an-cta>svg{background:#16181c;color:#fff}
+.an{display:flex;flex-direction:column;gap:12px}
+.an-sec{display:flex;flex-direction:column;gap:2px;margin-top:6px}.an-sec b{font-size:16px}.an-sec span{font-size:13.5px;color:var(--muted)}
+.an-fotos{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}
+.an-f{position:relative;aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:var(--g50)}.an-f img{width:100%;height:100%;object-fit:cover;display:block}
+.an-capa,.an-cp{position:absolute;left:6px;bottom:6px;background:#16181c;color:#fff;border:0;border-radius:999px;font-size:11.5px;font-weight:800;padding:4px 9px;cursor:pointer;font-family:inherit}
+.an-cp{background:rgba(255,255,255,.92);color:#16181c}
+.an-rm{position:absolute;top:6px;right:6px;width:28px;height:28px;border-radius:50%;border:0;background:rgba(17,19,22,.75);color:#fff;font-size:17px;line-height:1;cursor:pointer}
+.an-vazio{grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:10px;border:2px dashed var(--line);border-radius:14px;padding:22px;color:var(--muted)}.an-vazio svg{width:26px;height:26px}
+.an-addf{align-self:flex-start;min-height:46px}
+.an-fin{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--g50);border-radius:14px;padding:4px;max-width:380px}
+.an-fin button{border:0;background:transparent;border-radius:11px;min-height:44px;font-weight:800;font-size:15px;color:var(--muted);cursor:pointer;font-family:inherit}
+.an-fin button.on{background:#16181c;color:#fff}
+html.escuro body:not(.cat-on) .an-fin button.on{background:#f3f4f6;color:#16181c}
+.an-nums{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.an-n{display:flex;flex-direction:column;gap:6px}.an-n label{font-size:13.5px;font-weight:700}
+.an-step{display:flex;align-items:center;border:1px solid var(--line);border-radius:12px;overflow:hidden;height:46px;background:var(--card)}
+.an-step button{flex:none;width:42px;height:100%;border:0;background:var(--g50);font-size:20px;cursor:pointer;color:var(--text)}
+.an-step input{flex:1;min-width:0;border:0!important;text-align:center;font-weight:800;font-size:16px;height:100%;background:transparent!important}
+.an-area{height:46px}
 </style>
 </head>
 <body>
@@ -6026,15 +6075,16 @@ function pgCatalogoAdmin() {
     <div class="card ct-link"><div class="card-b"><b class="ct-link-t">O link do seu site</b><div class="cat-link"><input readonly value="${esc(link)}" aria-label="Link do site"><button class="btn pri" data-act="catCopiar">Copiar link</button></div>
       <div class="ct-link-b"><a class="btn" href="${esc(link)}" target="_blank" rel="noopener">${ic('arrow')} Ver como o cliente vê</a><a class="btn ok" href="${waLink('', 'Confira nossos imóveis: ' + link)}" target="_blank" rel="noopener">${ic('wa')} Mandar por WhatsApp</a></div>
       <p class="small muted" style="margin:10px 0 0">Para colocar no Instagram: copie o link, abra seu perfil, toque em <b>Editar perfil</b> e cole em <b>Links</b>.</p></div></div>
+    <button class="an-cta" data-act="anunciar">${ic('plus')}<span><b>Anunciar imóvel</b><small>Coloque as fotos, o valor e publique no seu site em uma tela só</small></span></button>
     <div class="grid g4" style="margin-top:16px">${kpi('No catálogo', no, `de ${ims.length} imóvel(is)`, 'accent')}${kpi('Lançamentos', emps.filter(e => e.publicar).length, `de ${emps.length} empreendimento(s)`)}${kpi('Interessados', S.contatos.filter(c => c.origem === 'Catálogo').length, 'vieram pelo catálogo')}${kpi('Novos hoje', S.contatos.filter(c => c.origem === 'Catálogo' && (c.criadoEm || '').slice(0, 10) === hoje()).length, '')}</div>
     <div style="margin-top:16px">${cfgCatalogo()}</div>
-    <div class="card" style="margin-top:16px"><div class="card-h"><h3>Imóveis no site</h3><button class="btn sm pri" data-act="novo" data-ent="imoveis">${ic('plus')} Cadastrar imóvel</button></div>
+    <div class="card" style="margin-top:16px"><div class="card-h"><h3>Seus imóveis</h3><button class="btn sm pri" data-act="anunciar">${ic('plus')} Anunciar imóvel</button></div>
       ${ims.length ? `<div class="cat-adm">${ims.map(i => { const a = i.anuncio || {}; const pode = i.situacao !== 'inativo' && !(i.situacao === 'alugado' && (a.finalidade || 'aluguel') === 'aluguel'); return `<div class="cat-adm-i">
         <div class="cat-adm-f" data-capa="${(i.fotos || [])[0]?.id || ''}">${ic('img')}</div>
         <div class="cat-adm-t"><b>${esc(a.titulo || (i.codigo + ' · ' + (i.bairro || '')))}</b><span>${esc(i.codigo)} · ${esc(i.bairro || '')} · ${a.finalidade ? FINALIDADE[a.finalidade] : 'sem anúncio'}${preco(i) ? ' · ' + brl(parseNum(preco(i))) : ''}</span>
           <span class="cat-adm-st">${pill(i.situacao === 'alugado' ? 'pago' : i.situacao === 'disponivel' ? 'pendente' : 'na', { alugado: 'Alugado', disponivel: 'Disponível', inativo: 'Inativo' }[i.situacao] || i.situacao)}${!(i.fotos || []).length ? ' <span class="xs muted">sem fotos</span>' : ''}${a.ativo && !pode ? ' <span class="xs muted">fora do catálogo enquanto alugado</span>' : ''}</span></div>
         <label class="cat-adm-sw" title="Mostrar no catálogo"><input type="checkbox" class="sw" data-catim="${i.id}" ${a.ativo ? 'checked' : ''}><span>${a.ativo ? 'No catálogo' : 'Oculto'}</span></label>
-        <button class="btn sm" data-act="editar" data-ent="imoveis" data-id="${i.id}">${ic('edit')} Anúncio</button></div>`; }).join('')}</div>` : `<div class="card-b">${vazio('Nenhum imóvel ainda', 'Cadastre o imóvel, ligue "Mostrar no catálogo" e coloque as fotos.', '', 'building')}</div>`}</div>
+        <button class="btn sm" data-act="anunciar" data-id="${i.id}">${ic('edit')} ${a.ativo ? 'Editar anúncio' : 'Anunciar'}</button></div>`; }).join('')}</div>` : `<div class="card-b">${vazio('Nenhum imóvel ainda', 'Toque em "Anunciar imóvel" para colocar o primeiro no seu site.', '', 'building')}</div>`}</div>
     <div class="card" style="margin-top:16px"><div class="card-h"><h3>Empreendimentos</h3><a class="btn sm" href="#/empreendimentos">Gerenciar</a></div>
       ${emps.length ? `<div class="cat-adm">${emps.map(e => { const r = empResumo(e); return `<div class="cat-adm-i"><div class="cat-adm-f" data-capa="${(e.fotos || [])[0]?.id || ''}">${ic('building')}</div><div class="cat-adm-t"><b>${esc(e.nome)}</b><span>${FASE_EMP[e.fase] || 'Lançamento'} · ${r.disp} disponíveis · ${r.res} reservadas · ${r.vend} vendidas</span></div>
         <label class="cat-adm-sw"><input type="checkbox" class="sw" data-catemp="${e.id}" ${e.publicar ? 'checked' : ''}><span>${e.publicar ? 'No catálogo' : 'Oculto'}</span></label><a class="btn sm" href="#/empreendimentos/${e.id}">Espelho</a></div>`; }).join('')}</div>` : `<div class="card-b small muted">Nenhum empreendimento. <a href="#/empreendimentos">Cadastrar lançamento</a></div>`}</div>
@@ -6323,7 +6373,7 @@ function nvOuvirAssinatura() {
     if (!st.liberado && !espiar && !['assinatura', 'config'].includes(r)) { history.replaceState(null, '', '#/assinatura'); barrou = true; }
     _rota();
     if (!st.liberado && !espiar && (barrou || !sessionStorage.getItem('imovyn_aviso_pg'))) setTimeout(() => avisoPagamento(st), 350);
-    if (espiar && r !== 'assinatura') { const c = $('#content'); if (c) c.insertAdjacentHTML('afterbegin', `<div class="ass-faixa esp"><span><b>Você está experimentando o imovyn.</b> Abra as telas e veja como funciona. Para salvar de verdade, comece o seu mês grátis.</span><button class="btn sm pri" type="button" data-act="avisoPg">Começar ${TESTE_TXT} grátis</button></div>`); return; }
+    if (espiar && r !== 'assinatura') { const c = $('#content'); if (c) c.insertAdjacentHTML('afterbegin', `<div class="ass-faixa esp"><span><b>Você está experimentando o Imovyn.</b> Abra as telas e veja como funciona. Para salvar de verdade, comece o seu mês grátis.</span><button class="btn sm pri" type="button" data-act="avisoPg">Começar ${TESTE_TXT} grátis</button></div>`); return; }
     const el = $('#content'); if (!el || st.tipo === 'isenta' || st.tipo === 'carregando') return;
     let aviso = '';
     if (st.tipo === 'teste') aviso = st.cartao ? `<div class="ass-faixa"><span><b>${st.dias === 0 ? 'Último dia grátis' : st.dias + (st.dias === 1 ? ' dia grátis' : ' dias grátis')}.</b> A 1ª cobrança no cartão é em ${fmtData(st.ate)}.</span><a class="btn sm" href="#/assinatura">Ver assinatura</a></div>` : `<div class="ass-faixa"><span><b>${st.dias === 0 ? 'Último dia grátis' : st.dias + (st.dias === 1 ? ' dia grátis' : ' dias grátis')}</b> para testar tudo.</span><a class="btn sm pri" href="#/assinatura">Assinar agora</a></div>`;
@@ -6500,14 +6550,14 @@ function faixaInstalar() {
    O site público de imóveis (catálogo) continua sempre claro.
    ===================================================================== */
 Object.assign(ICONS, {
-  lua: '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+  lua: '<path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z" fill="currentColor" stroke="none"/>',
   sol: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>'
 });
 const temaAtual = () => { try { return localStorage.getItem('imovyn_tema') === 'escuro' ? 'escuro' : 'claro'; } catch { return 'claro'; } };
 function aplicarTema(t = temaAtual()) {
   document.documentElement.classList.toggle('escuro', t === 'escuro');
   const m = document.querySelector('meta[name="theme-color"]'); if (m) m.setAttribute('content', t === 'escuro' ? '#121316' : '#ffffff');
-  const b = document.getElementById('b-tema'); if (b) { b.innerHTML = ic(t === 'escuro' ? 'sol' : 'lua'); b.setAttribute('aria-label', t === 'escuro' ? 'Usar modo claro' : 'Usar modo escuro'); b.title = b.getAttribute('aria-label'); }
+  const b = document.getElementById('b-tema'); if (b) { b.innerHTML = `<span class="tt-ic sol">${ic('sol')}</span><span class="tt-ic lua">${ic('lua')}</span><span class="tt-knob"></span>`; b.classList.toggle('on', t === 'escuro'); b.setAttribute('aria-label', t === 'escuro' ? 'Usar modo claro' : 'Usar modo escuro'); b.setAttribute('aria-pressed', t === 'escuro'); b.title = b.getAttribute('aria-label'); }
 }
 function trocarTema() { const t = temaAtual() === 'escuro' ? 'claro' : 'escuro'; try { localStorage.setItem('imovyn_tema', t); } catch { } aplicarTema(t); toast(t === 'escuro' ? 'Modo escuro ligado.' : 'Modo claro ligado.', 'ok'); }
 ACT.trocarTema = () => trocarTema();
@@ -6517,7 +6567,7 @@ aplicarTema();
   montarShell = function (...x) {
     _shell(...x);
     const s = document.getElementById('sino');
-    if (s && !document.getElementById('b-tema')) { s.insertAdjacentHTML('afterend', `<button type="button" class="sino tema-btn" id="b-tema"></button>`); document.getElementById('b-tema').onclick = trocarTema; }
+    if (s && !document.getElementById('b-tema')) { s.insertAdjacentHTML('afterend', `<button type="button" class="tema-btn" id="b-tema"></button>`); document.getElementById('b-tema').onclick = trocarTema; }
     aplicarTema();
   };
 }
@@ -6540,10 +6590,10 @@ const DICAS = {
   agenda: ['Agenda de visitas', 'Marque as visitas aos imóveis. Toque em um dia do calendário para ver as visitas dele e em "Lembrar cliente" para avisar a pessoa pelo WhatsApp.'],
   proprietarios: ['Proprietários', 'Cadastre os donos dos imóveis, com dados de contato e a conta para o repasse do aluguel.'],
   inquilinos: ['Inquilinos', 'Cadastre quem aluga os imóveis. Na ficha de cada um ficam o contrato, os valores, o vencimento e o histórico de pagamentos.'],
-  imoveis: ['Imóveis', 'Todos os imóveis da imobiliária. Na ficha do imóvel você coloca as fotos e liga "Mostrar no catálogo" para ele aparecer no seu site.'],
+  imoveis: ['Imóveis', 'Todos os imóveis da imobiliária. Para colocar um imóvel no seu site, vá em Catálogo e toque em "Anunciar imóvel".'],
   empreendimentos: ['Empreendimentos', 'Lançamentos e prédios em construção. O espelho de vendas mostra cada unidade como disponível, reservada ou vendida.'],
   contratos: ['Contratos de locação', 'Os contratos de aluguel com valores, encargos, garantia e datas. É deles que sai a cobrança de cada mês.'],
-  catalogo: ['Catálogo (seu site)', 'É o site de imóveis para colocar na bio do Instagram. Copie o link no alto, mude a aparência em "Como aparece no site" e escolha quais imóveis aparecem.'],
+  catalogo: ['Catálogo (seu site)', 'É o site de imóveis para colocar na bio do Instagram. Toque em "Anunciar imóvel", coloque as fotos e o valor e toque em "Publicar no site". Copie o link no alto para mandar aos clientes.'],
   equipe: ['Equipe e comissões', 'Cadastre corretores e captadores e controle as comissões de cada um. Para a pessoa entrar no sistema, cadastre o e-mail dela em Configurações › Usuários.'],
   relatorios: ['Relatórios', 'Escolha o relatório e o período. Dá para salvar em planilha ou em PDF para imprimir ou mandar.'],
   config: ['Configurações', 'Dados da imobiliária, logotipo, modelos de mensagem e quem pode entrar no sistema (em "Usuários e permissões").'],
@@ -6596,6 +6646,175 @@ ACT.tutorial = () => { try { Object.keys(DICAS).forEach(k => localStorage.remove
   const _ent = entrar;
   entrar = async function (...x) { const r = await _ent(...x); setTimeout(() => { if (!$('.ov')) tutorialBoasVindas(); }, 1200); return r; };
 }
+/* =====================================================================
+   APARELHOS CONECTADOS
+   Cada aparelho que entra na conta fica registrado em sessoes/{aparelho}.
+   Em Configurações › Usuários e permissões o administrador vê todos e pode
+   tocar em "Desconectar": o aparelho sai na hora. Ao desativar um usuário,
+   os aparelhos dele também são desconectados.
+   ===================================================================== */
+const Sess = { id: '', ok: false, unsub: null, timer: null, viu: false };
+function idAparelho() { try { let i = localStorage.getItem('imovyn_dev'); if (!i) { i = 'd' + uid(); localStorage.setItem('imovyn_dev', i); } return i; } catch { return 'd' + uid(); } }
+function nomeAparelho() {
+  const u = navigator.userAgent;
+  const so = /iPhone/.test(u) ? 'iPhone' : /iPad/.test(u) || (/Macintosh/.test(u) && 'ontouchend' in document) ? 'iPad' : /Android/.test(u) ? (/Mobile/.test(u) ? 'Celular Android' : 'Tablet Android') : /Windows/.test(u) ? 'Computador Windows' : /Macintosh/.test(u) ? 'Mac' : /Linux/.test(u) ? 'Computador Linux' : 'Aparelho';
+  const nav = /Edg\//.test(u) ? 'Edge' : /OPR\//.test(u) ? 'Opera' : /CriOS|Chrome\//.test(u) ? 'Chrome' : /FxiOS|Firefox\//.test(u) ? 'Firefox' : /Safari\//.test(u) ? 'Safari' : '';
+  return so + (nav ? ' · ' + nav : '') + (appInstalado() ? ' · app' : '');
+}
+const sessDoc = id => Nuvem.db.doc(nvPath('sessoes/' + id));
+function sessDados(extra = {}) { return Object.assign({ email: String(Nuvem.email || U?.email || '').toLowerCase(), nome: U?.nome || '', aparelho: nomeAparelho(), criado: Sess.criado || agoraISO(), visto: agoraISO(), sair: false }, extra); }
+async function sessRegistrar() {
+  if (Sess.ok || !U || !nuvemAtiva() || !Nuvem.pronto || !Nuvem.tid || !Nuvem.db || MODO_DEMO) return;
+  Sess.ok = true; Sess.id = idAparelho(); Sess.viu = false;
+  try {
+    const d = await sessDoc(Sess.id).get(); const ant = d.exists ? d.data() : null;
+    if (ant && ant.sair && !ant.saiu) { Sess.ok = false; return sessExpulsar(); }
+    Sess.criado = ant && !ant.saiu ? ant.criado : agoraISO();
+    await sessDoc(Sess.id).set(sessDados());
+    Sess.unsub = sessDoc(Sess.id).onSnapshot(s => { const x = s.exists ? s.data() : null; if (x && x.sair && !x.saiu) sessExpulsar(); }, () => { });
+    setTimeout(() => { try { cartaoAparelhos(); } catch { } }, 300);
+    clearInterval(Sess.timer); Sess.timer = setInterval(() => { if (Sess.ok && !document.hidden) sessDoc(Sess.id).set(sessDados()).catch(() => { }); }, 10 * 60e3);
+  } catch (e) { console.warn('aparelho', e); Sess.ok = false; }
+}
+function sessParar() { if (Sess.unsub) { try { Sess.unsub(); } catch { } } Sess.unsub = null; clearInterval(Sess.timer); Sess.ok = false; }
+async function sessExpulsar() {
+  sessParar();
+  try { await sessDoc(Sess.id).set(sessDados({ sair: true, saiu: true })); } catch { }
+  _sairOriginal();
+  setTimeout(() => toast('Este aparelho foi desconectado da conta pelo administrador.', 'warn'), 400);
+}
+let _sairOriginal = sair;
+{
+  _sairOriginal = sair;
+  sair = function () { const id = Sess.id, ok = Sess.ok; sessParar(); if (ok && Nuvem.db) { try { sessDoc(id).set(sessDados({ sair: true, saiu: true })); } catch { } } _sairOriginal(); };
+}
+setInterval(() => { try { sessRegistrar(); } catch { } }, 2500);
+
+/* lista na tela de usuários */
+function tempoDesde(iso) { const m = Math.round((Date.now() - new Date(iso).getTime()) / 60000); if (!(m >= 0)) return ''; if (m < 15) return 'conectado agora'; if (m < 60) return `visto há ${m} min`; const h = Math.round(m / 60); if (h < 24) return `visto há ${h} h`; const d = Math.round(h / 24); return `visto há ${d} ${d === 1 ? 'dia' : 'dias'}`; }
+async function cartaoAparelhos() {
+  const c = $('#content'); if (!c || !nuvemAtiva() || !Nuvem.db || !Nuvem.tid || MODO_DEMO) return;
+  if (!/^#\/config\/usuarios/.test(location.hash)) return;
+  let box = $('#aparelhos'); if (!box) { c.insertAdjacentHTML('beforeend', `<div class="card" id="aparelhos" style="margin-top:16px"><div class="card-h"><h3>Aparelhos conectados</h3></div><div class="card-b"><div class="small muted">Carregando…</div></div></div>`); box = $('#aparelhos'); }
+  const admin = U && U.papel === 'admin', eu = String(Nuvem.email || U?.email || '').toLowerCase();
+  let l = [];
+  try { const r = await Nuvem.db.collection(nvPath('sessoes')).get(); l = r.docs.map(d => Object.assign({ id: d.id }, d.data())); } catch (e) { $('.card-b', box).innerHTML = '<div class="small muted">Não foi possível carregar os aparelhos agora.</div>'; return; }
+  const limite = Date.now() - 45 * 864e5;
+  l = l.filter(x => !x.sair && x.visto && new Date(x.visto).getTime() > limite && (admin || x.email === eu)).sort((a, b) => String(b.visto).localeCompare(String(a.visto)));
+  const nomeDe = e => (S.usuarios.find(u => String(u.email || '').toLowerCase() === e) || {}).nome || e;
+  $('.card-b', box).innerHTML = `<p class="small muted" style="margin-top:0">${admin ? 'Todos os aparelhos que entraram na conta da imobiliária. Se alguém saiu da equipe, toque em <b>Desconectar</b> e desative o usuário acima: a pessoa perde o acesso na hora.' : 'Os aparelhos em que a sua conta está aberta.'}</p>
+    ${l.length ? `<div class="ap-lista">${l.map(x => `<div class="ap-it"><span class="ap-ico">${ic('celular')}</span><div><b>${esc(nomeDe(x.email))}</b><span>${esc(x.aparelho || 'Aparelho')} · ${esc(tempoDesde(x.visto))}</span><small>${esc(x.email)}</small></div>${x.id === Sess.id ? '<span class="pill pago">Este aparelho</span>' : `<button class="btn sm danger" data-desc="${esc(x.id)}">Desconectar</button>`}</div>`).join('')}</div>` : '<div class="small muted">Nenhum aparelho conectado.</div>'}`;
+  $$('[data-desc]', box).forEach(b => b.onclick = async () => {
+    if (!(await confirmar('Desconectar este aparelho? A pessoa vai precisar entrar de novo. Se ela não faz mais parte da equipe, desative também o usuário dela.', { ok: 'Desconectar', perigo: true }))) return;
+    const x = l.find(y => y.id === b.dataset.desc); if (!x) return;
+    try { await Nuvem.db.doc(nvPath('sessoes/' + x.id)).set((({ id, ...r }) => Object.assign(r, { sair: true, saiu: false, desconectadoPor: eu, em: agoraISO() }))(x)); toast('Aparelho desconectado.', 'ok'); cartaoAparelhos(); } catch (e) { toast('Não foi possível desconectar: ' + (e.message || e), 'err'); }
+  });
+}
+async function desconectarEmail(email) {
+  if (!nuvemAtiva() || !Nuvem.db || !email) return;
+  try { const r = await Nuvem.db.collection(nvPath('sessoes')).get(); const b = Nuvem.db.batch(); let n = 0;
+    r.docs.forEach(d => { const x = d.data(); if (x.email === String(email).toLowerCase() && !x.sair) { b.set(Nuvem.db.doc(nvPath('sessoes/' + d.id)), Object.assign({}, x, { sair: true, saiu: false, em: agoraISO() })); n++; } });
+    if (n) await b.commit(); } catch (e) { console.warn('desconectar', e); }
+}
+{
+  const _rota = rota;
+  rota = function (...x) { _rota(...x); setTimeout(() => { try { cartaoAparelhos(); } catch { } }, 50); };
+}
+setTimeout(() => {
+  const _tg = ACT.toggleUser; if (!_tg) return;
+  ACT.toggleUser = async (d, ...x) => { const u = S.usuarios.find(y => y.id === d.id); const ia = u && u.ativo !== false; const r = await _tg(d, ...x); if (ia && u && u.ativo === false && u.email) { await desconectarEmail(u.email); toast(`${u.nome} foi desativado e desconectado de todos os aparelhos.`, 'ok'); } return r; };
+}, 0);
+
+setInterval(() => { if (/^#\/config\/usuarios/.test(location.hash) && !document.hidden && !$('.ov')) { try { cartaoAparelhos(); } catch { } } }, 15000);
+/* =====================================================================
+   ANUNCIAR IMÓVEL: uma tela só para colocar (ou editar) um imóvel no site.
+   Fotos + finalidade + valores + características + "Publicar no site".
+   ===================================================================== */
+const ANUNCIO_FOTOS_MAX = 20;
+function anunciarImovel(id) {
+  const ex = id ? getIm(id) : null;
+  const a = (ex && ex.anuncio) || {};
+  const fin0 = a.finalidade || 'aluguel';
+  let fin = fin0 === 'ambos' ? 'aluguel' : fin0;
+  const fotos = (ex ? [...(ex.fotos || [])] : []).map(f => ({ f })); /* {f} = já salva, {file,url} = nova */
+  const v = x => (x === undefined || x === null ? '' : x);
+  const num = x => (x === '' || x === undefined || x === null ? '' : fmtNum(parseNum(x)));
+  const nInt = (k, l) => `<div class="an-n"><label for="an-${k}">${l}</label><div class="an-step"><button type="button" data-st="${k}" data-d="-1" aria-label="Menos">−</button><input id="an-${k}" inputmode="numeric" value="${esc(String(v(a[k]) || 0))}"><button type="button" data-st="${k}" data-d="1" aria-label="Mais">+</button></div></div>`;
+  const tipos = Object.entries(TIPO_IM).map(([k, n]) => `<option value="${k}" ${(ex ? ex.tipo : 'apartamento') === k ? 'selected' : ''}>${n}</option>`).join('');
+  const corpo = `<div class="an">
+    <div class="an-sec"><b>1. Fotos</b><span>A primeira foto é a capa. Escolha várias de uma vez.</span></div>
+    <div class="an-fotos" id="an-fotos"></div>
+    <label class="btn an-addf">${ic('upload')} Escolher fotos<input type="file" accept="image/*" multiple hidden id="an-in"></label>
+    <div class="an-sec"><b>2. O imóvel é para</b></div>
+    <div class="an-fin"><button type="button" data-fin="aluguel">Alugar</button><button type="button" data-fin="venda">Vender</button></div>
+    <div class="form">
+      <div class="fld c6"><label for="an-tipo">Tipo</label><select id="an-tipo">${tipos}</select></div>
+      <div class="fld c6"><label for="an-bairro">Bairro</label><input id="an-bairro" value="${esc(v(ex && ex.bairro))}" placeholder="Ex.: Buritis"></div>
+      <div class="fld c6"><label for="an-cidade">Cidade</label><input id="an-cidade" value="${esc(v(ex ? ex.cidade : (S.empresa.cidade || '').split('/')[0] || 'Belo Horizonte'))}"></div>
+      <div class="fld c6"><label for="an-rua">Endereço (não aparece no site)</label><input id="an-rua" value="${esc(v(ex && ex.rua))}${ex && ex.numero ? ', ' + esc(ex.numero) : ''}" placeholder="Rua e número"></div>
+    </div>
+    <div class="an-sec"><b>3. Valores</b></div>
+    <div class="form">
+      <div class="fld c4"><label for="an-valor" id="an-vl">${fin === 'venda' ? 'Valor de venda (R$)' : 'Aluguel por mês (R$)'}</label><input id="an-valor" inputmode="decimal" value="${esc(num(fin === 'venda' ? a.valorVenda : a.valorAluguel))}" placeholder="0,00"></div>
+      <div class="fld c4"><label for="an-cond">Condomínio (R$)</label><input id="an-cond" inputmode="decimal" value="${esc(num(a.condominio))}" placeholder="0,00"></div>
+      <div class="fld c4"><label for="an-iptu">IPTU por mês (R$)</label><input id="an-iptu" inputmode="decimal" value="${esc(num(a.iptu))}" placeholder="0,00"></div>
+    </div>
+    <div class="an-sec"><b>4. Características</b></div>
+    <div class="an-nums">${nInt('quartos', 'Quartos')}${nInt('suites', 'Suítes')}${nInt('banheiros', 'Banheiros')}${nInt('vagas', 'Vagas')}<div class="an-n"><label for="an-area">Área (m²)</label><input id="an-area" class="an-area" inputmode="decimal" value="${esc(v(a.area))}" placeholder="0"></div></div>
+    <div class="an-sec"><b>5. Texto do anúncio</b></div>
+    <div class="form">
+      <div class="fld c12"><label for="an-tit">Título</label><input id="an-tit" value="${esc(v(a.titulo))}" placeholder="Ex.: Apartamento 3 quartos com varanda no Buritis"></div>
+      <div class="fld c12"><label for="an-desc">Descrição</label><textarea id="an-desc" rows="4" placeholder="Conte o que o imóvel tem de bom: posição, vista, lazer, perto de quê...">${esc(v(a.descricao))}</textarea></div>
+      <div class="fld c12"><label class="toggle"><input type="checkbox" id="an-dest" ${a.destaque ? 'checked' : ''}> Colocar em destaque no site</label></div>
+    </div></div>`;
+  const ov = modal({ titulo: ex ? 'Editar anúncio ' + (ex.codigo || '') : 'Anunciar imóvel', tam: 'lg', corpo,
+    rodape: `<button class="btn" data-close>Cancelar</button>${ex && a.ativo ? '<button class="btn" id="an-tirar">Tirar do site</button>' : ''}<button class="btn pri" id="an-ok">${ic('send')} Publicar no site</button>` });
+  const desenharFotos = () => {
+    const box = $('#an-fotos', ov);
+    box.innerHTML = fotos.length ? fotos.map((x, k) => `<div class="an-f">${x.url ? `<img src="${x.url}" alt="">` : `<img data-thumb="${x.f.id}" alt="">`}${k === 0 ? '<span class="an-capa">Capa</span>' : `<button type="button" class="an-cp" data-capa="${k}" title="Usar como capa">Usar de capa</button>`}<button type="button" class="an-rm" data-rmf="${k}" aria-label="Tirar foto">×</button></div>`).join('') : `<div class="an-vazio">${ic('img')}<span>Nenhuma foto ainda</span></div>`;
+    carregarMiniaturas(box);
+    $$('[data-rmf]', box).forEach(b => b.onclick = () => { const [x] = fotos.splice(+b.dataset.rmf, 1); if (x && x.url) { try { URL.revokeObjectURL(x.url); } catch { } } desenharFotos(); });
+    $$('[data-capa]', box).forEach(b => b.onclick = () => { const [x] = fotos.splice(+b.dataset.capa, 1); fotos.unshift(x); desenharFotos(); });
+  };
+  $('#an-in', ov).onchange = e => { [...(e.target.files || [])].slice(0, Math.max(0, ANUNCIO_FOTOS_MAX - fotos.length)).forEach(f => fotos.push({ file: f, url: URL.createObjectURL(f) })); e.target.value = ''; desenharFotos(); };
+  const marcarFin = () => { $$('[data-fin]', ov).forEach(b => b.classList.toggle('on', b.dataset.fin === fin)); $('#an-vl', ov).textContent = fin === 'venda' ? 'Valor de venda (R$)' : 'Aluguel por mês (R$)'; };
+  $$('[data-fin]', ov).forEach(b => b.onclick = () => { fin = b.dataset.fin; const val = fin === 'venda' ? a.valorVenda : a.valorAluguel; $('#an-valor', ov).value = num(val); marcarFin(); });
+  $$('[data-st]', ov).forEach(b => b.onclick = () => { const i = $('#an-' + b.dataset.st, ov); i.value = Math.max(0, Math.min(30, (parseInt(i.value, 10) || 0) + +b.dataset.d)); });
+  const tirar = $('#an-tirar', ov); if (tirar) tirar.onclick = async () => { ex.anuncio = Object.assign({}, ex.anuncio, { ativo: false }); auditar('Tirou do catálogo', ex.codigo); await salvar(); if (nuvemAtiva() && Nuvem.pronto) pubSincronizar(true).catch(() => { }); ov.fechar(); toast('Imóvel tirado do site.', 'ok'); atualizar(); };
+  $('#an-ok', ov).onclick = async () => {
+    const val = parseNum($('#an-valor', ov).value), bairro = $('#an-bairro', ov).value.trim();
+    if (!bairro) { toast('Informe o bairro do imóvel.', 'warn'); $('#an-bairro', ov).focus(); return; }
+    if (!val) { toast(fin === 'venda' ? 'Informe o valor de venda.' : 'Informe o valor do aluguel.', 'warn'); $('#an-valor', ov).focus(); return; }
+    const b = $('#an-ok', ov); b.disabled = true; b.textContent = 'Publicando…';
+    try {
+      const lista = [];
+      for (const x of fotos) { if (x.f) lista.push(x.f); else { const m = await guardarArquivo(x.file); if (m) lista.push(m); } }
+      const [rua, numero] = $('#an-rua', ov).value.split(/,\s*/);
+      const intv = k => parseInt($('#an-' + k, ov).value, 10) || 0;
+      const anuncio = Object.assign({}, a, {
+        ativo: true, finalidade: a.finalidade === 'ambos' ? 'ambos' : fin,
+        [fin === 'venda' ? 'valorVenda' : 'valorAluguel']: val,
+        condominio: parseNum($('#an-cond', ov).value) || 0, iptu: parseNum($('#an-iptu', ov).value) || 0,
+        quartos: intv('quartos'), suites: intv('suites'), banheiros: intv('banheiros'), vagas: intv('vagas'), area: parseNum($('#an-area', ov).value) || 0,
+        titulo: $('#an-tit', ov).value.trim(), descricao: $('#an-desc', ov).value.trim(), destaque: $('#an-dest', ov).checked });
+      const dados = { tipo: $('#an-tipo', ov).value, bairro, cidade: $('#an-cidade', ov).value.trim(), rua: (rua || '').trim(), numero: (numero || '').trim(), fotos: lista, anuncio };
+      let im = ex;
+      if (im) Object.assign(im, dados);
+      else { im = novoRegistro('imoveis', dados); S.imoveis.push(im); }
+      auditar(ex ? 'Editou o anúncio' : 'Anunciou imóvel', im.codigo);
+      await salvar();
+      if (nuvemAtiva() && Nuvem.pronto) pubSincronizar(true).catch(() => { });
+      fotos.forEach(x => { if (x.url) { try { URL.revokeObjectURL(x.url); } catch { } } });
+      ov.fechar();
+      const link = linkCatalogo('/i/' + im.id);
+      const ok = modal({ titulo: '', tam: 'sm', corpo: `<div class="ap-av"><div class="ap-ic" style="color:#1d7a45">${ic('ok')}</div><h2>Publicado no seu site!</h2><p>O imóvel <b>${esc(im.codigo)}</b> já aparece para os clientes. Quando alguém pedir contato, ele chega em <b>Clientes e contatos</b>.</p></div>`,
+        rodape: `<button class="btn" data-close>Fechar</button><a class="btn ok" href="${waLink('', 'Olha este imóvel: ' + link)}" target="_blank" rel="noopener">${ic('wa')} Mandar no WhatsApp</a><a class="btn pri" href="${esc(link)}" target="_blank" rel="noopener">${ic('arrow')} Ver no site</a>` });
+      atualizar();
+    } catch (e) { console.warn(e); toast('Não foi possível publicar agora: ' + (e.message || e), 'err'); b.disabled = false; b.innerHTML = `${ic('send')} Publicar no site`; }
+  };
+  marcarFin(); desenharFotos();
+}
+ACT.anunciar = ({ id }) => anunciarImovel(id || '');
 /* =====================================================================
    Relatórios, configurações, integrações, importação, backup, demonstração
    ===================================================================== */
@@ -6703,7 +6922,7 @@ function cfgEmpresa() {
       <div class="fld c12"><label for="emp-n">Nome</label><input id="emp-n" value="${esc(S.empresa.nome)}"></div><div class="fld c12"><label for="emp-e">Endereço</label><input id="emp-e" value="${esc(S.empresa.endereco || '')}"></div>
       <div class="fld c4"><label for="emp-c">Cidade/UF</label><input id="emp-c" value="${esc(S.empresa.cidade || '')}"></div><div class="fld c4"><label for="emp-t">Telefone</label><input id="emp-t" value="${esc(S.empresa.telefone || '')}"></div><div class="fld c6"><label for="emp-m">E-mail da imobiliária</label><input id="emp-m" type="email" value="${esc(S.empresa.email || '')}"><span class="help">Vai na assinatura das mensagens.</span></div><div class="fld c6"><label for="emp-app">Abrir e-mails pelo</label><select id="emp-app"><option value="gmail" ${S.config.appEmail !== 'app' ? 'selected' : ''}>Gmail (navegador)</option><option value="app" ${S.config.appEmail === 'app' ? 'selected' : ''}>App de e-mail do aparelho</option></select></div><div class="fld c4"><label for="emp-w">WhatsApp da imobiliária</label><input id="emp-w" inputmode="tel" value="${esc(fmtTel(S.empresa.whatsapp || ''))}"><span class="help">Vai na assinatura das mensagens.</span></div></div></div></div>
     <div class="card"><div class="card-h"><h3>Logotipo</h3></div><div class="card-b"><div style="background:var(--g800);border-radius:10px;padding:18px;display:flex;align-items:center;gap:12px;margin-bottom:12px" class="brand logo-prev">${logoHTML(true)}</div>
-      <div class="row"><label class="btn">${ic('img')} Enviar logotipo<input id="lg-in" type="file" accept="image/*" hidden></label>${S.empresa.logo ? `<button class="btn danger" data-act="rmLogo">Voltar ao logo padrão</button>` : ''}</div><p class="small muted">PNG com fundo transparente fica melhor sobre o menu grafite.</p></div></div></div>
+      <div class="row"><label class="btn">${ic('img')} Enviar logotipo<input id="lg-in" type="file" accept="image/*" hidden></label>${S.empresa.logo ? `<button class="btn danger" data-act="rmLogo">Voltar ao logo padrão</button>` : ''}</div><p class="small muted">De preferência PNG com fundo transparente, quadrado ou deitado. Aparece no menu, no site de imóveis e nos documentos.</p></div></div></div>
     <div class="card" style="margin-top:16px"><div class="card-h"><h3>Conta da imobiliária (para receber dos inquilinos)</h3></div><div class="card-b"><p class="small muted" style="margin-top:0">Os dados vão na mensagem de cobrança para o inquilino pagar por transferência ou depósito. Pode usar junto com o Pix ou só a conta.</p><div class="form">
       ${(() => { const c = contaImob(); return `<div class="fld c4"><label for="rb-b">Banco</label><input id="rb-b" value="${esc(c.banco || '')}"></div><div class="fld c2"><label for="rb-a">Agência</label><input id="rb-a" value="${esc(c.agencia || '')}"></div><div class="fld c3"><label for="rb-c">Conta com dígito</label><input id="rb-c" value="${esc(c.conta || '')}"></div>
       <div class="fld c3"><label for="rb-t">Tipo</label><select id="rb-t">${[['corrente', 'Conta corrente'], ['poupanca', 'Conta poupança'], ['pagamento', 'Conta de pagamento']].map(([a, b]) => `<option value="${a}" ${c.tipoConta === a ? 'selected' : ''}>${b}</option>`).join('')}</select></div>
@@ -6829,7 +7048,7 @@ ACT.backup = async ({ arq }) => {
 async function restaurarBackup(file) {
   if (!file) return;
   let j; try { j = JSON.parse(await file.text()); } catch { toast('Arquivo inválido.', 'err'); return; }
-  if (j.formato !== 'altolar-crm-backup' || !j.dados) { toast('Este arquivo não é um backup do imovyn.', 'err'); return; }
+  if (j.formato !== 'altolar-crm-backup' || !j.dados) { toast('Este arquivo não é um backup do Imovyn.', 'err'); return; }
   if (!(await confirmar(`Restaurar o backup de ${fmtDH(j.exportadoEm)}? Todos os dados atuais deste navegador serão substituídos.`, { ok: 'Restaurar', perigo: true }))) return;
   S = migrar(j.dados);
   if ((j.arquivos || []).length) { await Store.clear('files'); for (const f of j.arquivos) await Store.put('files', f.id, { nome: f.nome, tipo: f.tipo, data: Store.modo === 'ls' ? f.data : await b64ParaBlob(f.data) }); }
