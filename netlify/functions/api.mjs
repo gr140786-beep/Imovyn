@@ -10,7 +10,7 @@ export const PLANOS = (env = {}) => ({
   mensal: { valor: Number(env.PRECO_MENSAL || 229.9), meses: 1, nome: "imovyn Mensal" },
   anual: { valor: Number(env.PRECO_ANUAL || 1890), meses: 12, nome: "imovyn Anual" },
 });
-const TID_PRINCIPAL = "principal"; // cliente fundador: não paga
+const TID_PRINCIPAL = "principal"; // cliente fundador (Alto Lar): dados na raiz do banco
 export function addMonthsISO(iso, months, extraDays = 0) {
   const d = new Date(String(iso).slice(0, 10) + "T12:00:00Z");
   d.setUTCMonth(d.getUTCMonth() + months);
@@ -26,7 +26,6 @@ export async function handleAssinatura(body, token, deps, env = {}) {
   let user;
   try { user = await deps.verify(token); } catch (e) { return { status: 401, json: { erro: "Sua sessão expirou. Entre de novo." } }; }
   const tid = String(body.tid || "");
-  if (tid === TID_PRINCIPAL) return { status: 400, json: { erro: "Esta conta não precisa de assinatura." } };
   if (!tidValido(tid)) return { status: 400, json: { erro: "Imobiliária não encontrada." } };
   if (!(await deps.ehAdmin(tid, String(user.email || "").toLowerCase()))) return { status: 403, json: { erro: "Só o administrador da imobiliária pode assinar." } };
   const cur = (await deps.db.get(tid)) || {};
@@ -171,9 +170,10 @@ function realDeps() {
     mp,
     verify: async (token) => { const u = await auth.verifyIdToken(token); return { uid: u.uid, email: u.email, name: u.name }; },
     ehAdmin: async (tid, email) => {
-      const dono = await store.doc("imob/" + tid + "/meta/dono").get();
+      const pre = tid === TID_PRINCIPAL ? "" : "imob/" + tid + "/";
+      const dono = await store.doc(pre + "meta/dono").get();
       if (dono.exists && String(dono.data().email || "").toLowerCase() === email) return true;
-      const m = await store.doc("imob/" + tid + "/membros/" + email).get();
+      const m = await store.doc(pre + "membros/" + email).get();
       return m.exists && m.data().papel === "admin" && m.data().ativo !== false;
     },
     db: {
