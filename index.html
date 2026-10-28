@@ -1267,6 +1267,11 @@ body:has(.ov) #ins-faixa{display:none}
 .ins-ja{width:100%;min-height:50px}
 .lg3-ins{margin-top:16px;display:inline-flex;align-items:center;gap:8px;border:1px solid #e4e4e0;background:#fff;color:#16181c;border-radius:999px;padding:11px 18px;font-weight:700;font-size:14.5px;cursor:pointer}
 .lg3-ins svg{width:18px;height:18px}
+.ass-per{display:inline-flex;background:#f1f1ee;border-radius:999px;padding:4px;gap:4px;margin:0 0 14px;flex-wrap:wrap}
+.ass-per button{border:0;background:transparent;border-radius:999px;padding:10px 18px;font-weight:700;font-size:14.5px;color:#5b6068;cursor:pointer;font-family:inherit}
+.ass-per button.on{background:#fff;color:#16181c;box-shadow:0 2px 8px rgba(0,0,0,.08)}.ass-per small{color:#23874f;font-weight:800;margin-left:4px}
+.ass-pls.t3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))!important}
+.ass-it{list-style:none;padding:0;margin:4px 0 6px;display:flex;flex-direction:column;gap:6px;font-size:14px}.ass-it li::before{content:"✓";color:#23874f;font-weight:800;margin-right:8px}
 </style>
 </head>
 <body>
@@ -6146,7 +6151,20 @@ function catImovelHTML(id) {
    - Sem pagamento depois do teste ou do período pago: trava, menos Assinatura e Configurações.
      Os dados continuam guardados.
    ===================================================================== */
-const PLANOS_IMOVYN = { mensal: { nome: 'Mensal', valor: 229.9, meses: 1 }, anual: { nome: 'Anual', valor: 1890, meses: 12 } };
+const NIVEIS_IMOVYN = {
+  essencial: { nome: 'Essencial', mes: 229.9, usuarios: 3, txt: 'Para o corretor ou a imobiliária pequena' },
+  profissional: { nome: 'Profissional', mes: 379.9, usuarios: 10, txt: 'Para a imobiliária com equipe' },
+  imobiliaria: { nome: 'Imobiliária', mes: 597.9, usuarios: 0, txt: 'Para a imobiliária grande, sem limite' } };
+const PLANOS_IMOVYN = (() => { const o = { mensal: { nome: 'Mensal', valor: 229.9, meses: 1 }, anual: { nome: 'Anual', valor: 1890, meses: 12 } };
+  for (const [k, n] of Object.entries(NIVEIS_IMOVYN)) { o[k + '_mensal'] = { nome: n.nome + ' mensal', valor: n.mes, meses: 1, nivel: k }; o[k + '_anual'] = { nome: n.nome + ' anual', valor: Math.round(n.mes * 1000) / 100, meses: 12, nivel: k }; }
+  return o; })();
+/* limite de usuários do plano (0 = sem limite). Sem plano escolhido ainda, ou na Alto Lar, não limita. */
+function limiteUsuarios() {
+  if (assinaturaIsenta() || Nuvem.tid === TID_PRINCIPAL) return 0;
+  const a = Nuvem.assin || {}, k = a.plano || a.planoPendente || '', p = PLANOS_IMOVYN[k];
+  return p && p.nivel ? NIVEIS_IMOVYN[p.nivel].usuarios : 0;
+}
+const usuariosAtivos = () => S.usuarios.filter(u => u.ativo !== false).length;
 const DIAS_TESTE = 7;
 const API_ASSINATURA = '/api/assinatura';
 const FIM_TESTE_FUNDADOR = '2026-11-27'; /* Alto Lar: 1 mês grátis para testes, depois assina como as outras */
@@ -6204,19 +6222,24 @@ function pgAssinatura() {
   const bloqueio = !st.liberado ? (st.tipo === 'sem'
     ? `<div class="notice info" style="margin-bottom:16px"><b>Falta só um passo para começar.</b> Cadastre o cartão e use tudo grátis por ${DIAS_TESTE} dias. A 1ª cobrança só acontece depois do teste. Se cancelar antes, não paga nada.</div>`
     : `<div class="notice bad" style="margin-bottom:16px"><b>O sistema está travado.</b> Seus dados continuam guardados e voltam assim que o pagamento for confirmado. Enquanto isso, só esta tela e Configurações abrem.</div>`) : '';
-  const pl = (k, p) => { const mes = p.valor / p.meses, eco = k === 'anual' ? PLANOS_IMOVYN.mensal.valor * 12 - p.valor : 0;
-    return `<div class="ass-pl ${k === 'anual' ? 'destaque' : ''}">${k === 'anual' ? '<span class="ass-sel">Mais econômico</span>' : ''}<b>${p.nome}</b>
-      <div class="ass-v">${brl(p.valor)}<small>/${k === 'anual' ? 'ano' : 'mês'}</small></div>
-      <span class="small muted">${k === 'anual' ? `equivale a ${brl(mes)} por mês · economia de ${brl(eco)}` : 'cobrado todo mês'}</span>
-      ${admin ? `<button class="btn pri" data-act="assinar" data-plano="${k}" data-forma="cartao">${ic('cash')} ${podeTeste ? `Começar ${DIAS_TESTE} dias grátis` : 'Cartão de crédito'}</button>${podeTeste ? `<span class="xs muted" style="margin-top:-4px">No cartão de crédito. 1ª cobrança depois de ${DIAS_TESTE} dias.</span>` : ''}<button class="btn" data-act="assinar" data-plano="${k}" data-forma="avulso">${ic('pix')} Pix ou débito${podeTeste ? ' (sem teste grátis)' : ''}</button>` : ''}</div>`; };
+  const per = Nuvem._assPer || 'mensal';
+  const pl = (nv) => { const n = NIVEIS_IMOVYN[nv], k = nv + '_' + per, p = PLANOS_IMOVYN[k], atual = a.plano === k;
+    return `<div class="ass-pl ${nv === 'profissional' ? 'destaque' : ''}">${nv === 'profissional' ? '<span class="ass-sel">Mais escolhido</span>' : ''}<b>${n.nome}</b><span class="small muted">${n.txt}</span>
+      <div class="ass-v">${brl(p.valor)}<small>/${per === 'anual' ? 'ano' : 'mês'}</small></div>
+      <span class="small muted">${per === 'anual' ? `equivale a ${brl(p.valor / 12)} por mês · 2 meses grátis` : 'cobrado todo mês'}</span>
+      <ul class="ass-it"><li>${n.usuarios ? `Até <b>${n.usuarios} usuários</b>` : '<b>Usuários à vontade</b>'}</li><li>Controle de aluguel, contratos e clientes</li><li>Site de imóveis com WhatsApp</li><li>Imóveis e lançamentos sem limite</li></ul>
+      ${atual ? '<span class="pill pago" style="align-self:flex-start">Seu plano</span>' : ''}
+      ${admin && !atual ? `<button class="btn pri" data-act="assinar" data-plano="${k}" data-forma="cartao">${ic('cash')} ${podeTeste ? `Começar ${DIAS_TESTE} dias grátis` : 'Cartão de crédito'}</button>${podeTeste ? `<span class="xs muted" style="margin-top:-4px">No cartão de crédito. 1ª cobrança depois de ${DIAS_TESTE} dias.</span>` : ''}<button class="btn" data-act="assinar" data-plano="${k}" data-forma="avulso">${ic('pix')} Pix ou débito${podeTeste ? ' (sem teste grátis)' : ''}</button>` : ''}</div>`; };
   const linhaAte = st.tipo === 'teste' && st.cartao ? ['1ª cobrança no cartão', fmtData(st.ate)] : [st.tipo === 'teste' ? 'Grátis até' : 'Acesso liberado até', st.ate ? fmtData(st.ate) : '-'];
   return `${cabecalho('Assinatura', 'Plano do imovyn para a sua imobiliária. Pagamento seguro pelo Mercado Pago.')}${bloqueio}
     <div class="card"><div class="card-h"><h3>${esc(titulo)}</h3>${pill(st.liberado ? (st.tipo === 'atrasada' ? 'vencido' : 'pago') : (st.tipo === 'sem' ? 'pendente' : 'vencido'), st.liberado ? 'Liberado' : (st.tipo === 'sem' ? 'Falta o cartão' : 'Travado'))}</div><div class="card-b">
-      ${dl([['Situação', esc(titulo)], ['Plano', a.plano ? (PLANOS_IMOVYN[a.plano]?.nome || a.plano) : '-'], ['Forma de pagamento', a.forma === 'cartao' ? 'Cartão de crédito (renova sozinho)' : a.forma === 'pix' ? 'Pix ou débito (paga por período)' : '-'], linhaAte])}
+      ${dl([['Situação', esc(titulo)], ['Plano', a.plano ? (PLANOS_IMOVYN[a.plano]?.nome || a.plano) : (a.planoPendente ? (PLANOS_IMOVYN[a.planoPendente]?.nome || '-') : '-')], ['Forma de pagamento', a.forma === 'cartao' ? 'Cartão de crédito (renova sozinho)' : a.forma === 'pix' ? 'Pix ou débito (paga por período)' : '-'], linhaAte])}
       ${a.linkPagamento && !['ativa', 'teste'].includes(st.tipo) ? `<a class="btn ok" style="margin-top:14px" href="${esc(a.linkPagamento)}" target="_blank" rel="noopener">Concluir no Mercado Pago</a>` : ''}
       ${!admin ? '<p class="small muted" style="margin-bottom:0">Só o administrador da imobiliária pode assinar ou cancelar.</p>' : ''}</div></div>
     <h3 style="margin:22px 0 10px">Escolha o plano</h3>
-    <div class="ass-pls">${pl('mensal', PLANOS_IMOVYN.mensal)}${pl('anual', PLANOS_IMOVYN.anual)}</div>
+    <div class="ass-per"><button type="button" class="${per === 'mensal' ? 'on' : ''}" data-act="assPer" data-p="mensal">Pagar por mês</button><button type="button" class="${per === 'anual' ? 'on' : ''}" data-act="assPer" data-p="anual">Pagar por ano <small>2 meses grátis</small></button></div>
+    <div class="ass-pls t3">${pl('essencial')}${pl('profissional')}${pl('imobiliaria')}</div>
+    ${limiteUsuarios() && usuariosAtivos() > limiteUsuarios() ? `<div class="notice warn" style="margin-top:12px">Sua equipe tem ${usuariosAtivos()} usuários e o seu plano permite ${limiteUsuarios()}. Escolha um plano maior para cadastrar mais pessoas.</div>` : ''}
     <p class="small muted">${podeTeste ? `Teste grátis: você cadastra o cartão no Mercado Pago e usa tudo por ${DIAS_TESTE} dias. A cobrança só começa depois. Pode cancelar aqui mesmo antes disso, sem pagar nada. ` : ''}Cartão de crédito: renova sozinho a cada período. Pix ou débito: você paga um período por vez e, se pagar antes de vencer, os dias se somam.</p>
     ${admin && a.mpAssinatura && a.status !== 'cancelada' ? `<button class="btn danger" data-act="cancelarAssinatura" style="margin-top:6px">${st.tipo === 'teste' && st.cartao ? 'Cancelar o teste (não será cobrado)' : 'Cancelar renovação automática'}</button>` : ''}
     ${(a.historico || []).length ? `<div class="card" style="margin-top:18px"><div class="card-h"><h3>Pagamentos</h3></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Data</th><th class="num">Valor</th><th>Situação</th></tr></thead><tbody>${a.historico.map(h => `<tr><td>${fmtData(h.vencimento)}</td><td class="num">${brl(h.valor || 0)}</td><td>${h.evento === 'PAYMENT_RECEIVED' ? pill('pago', 'Pago') : h.evento === 'PAYMENT_OVERDUE' ? pill('vencido', 'Recusado') : pill('pendente', 'Aguardando')}</td></tr>`).join('')}</tbody></table></div></div>` : ''}`;
@@ -6240,6 +6263,20 @@ ACT.cancelarAssinatura = async () => {
 };
 /* volta do Mercado Pago */
 if (/[?&]assinatura=ok/.test(location.search)) { history.replaceState(null, '', location.pathname + '#/assinatura'); setTimeout(() => toast('Recebemos o retorno do Mercado Pago. A liberação acontece assim que o pagamento for confirmado.', 'ok'), 1500); }
+
+ACT.assPer = ({ p }) => { Nuvem._assPer = p; rota(); };
+/* limite de usuários do plano ao cadastrar a equipe (depois que tudo carregou) */
+setTimeout(() => {
+  const _novo = ACT.novoUsuario; if (!_novo) return;
+  ACT.novoUsuario = (...x) => {
+    const lim = limiteUsuarios();
+    if (lim && usuariosAtivos() >= lim) {
+      const ov = modal({ titulo: 'Limite do plano', tam: 'sm', corpo: `<p style="margin-top:0">Seu plano permite até <b>${lim} usuários</b> e a equipe já tem ${usuariosAtivos()}.</p><p class="small muted">Para cadastrar mais pessoas, troque para um plano maior. Os dados continuam todos iguais.</p>`, rodape: `<button class="btn" data-close>Agora não</button><a class="btn pri" href="#/assinatura" data-close>Ver planos</a>` });
+      return;
+    }
+    return _novo(...x);
+  };
+}, 0);
 /* =====================================================================
    COLOCAR O APP NA TELA DE INÍCIO (passo a passo bem simples)
    - Faixa fixa embaixo da tela no celular/iPad até a pessoa instalar ou fechar.
