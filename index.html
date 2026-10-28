@@ -1293,6 +1293,7 @@ body:has(.ov) #ins-faixa{display:none}
 .ap-big{width:100%;min-height:52px;justify-content:center}
 .ap-ok{list-style:none;padding:0;margin:6px 0 0;display:flex;flex-direction:column;gap:6px;font-size:13.5px;color:#4b5059}.ap-ok li::before{content:"✓";color:#23874f;font-weight:800;margin-right:8px}
 .ov:has(.ap-av) .modal-h h3:empty{display:none}
+.ass-faixa.esp{background:#16181c;color:#fff;border-color:#16181c}.ass-faixa.esp .btn.pri{background:#fff;color:#16181c;border-color:#fff}
 </style>
 </head>
 <body>
@@ -6220,9 +6221,11 @@ function nvOuvirAssinatura() {
     if (!U) return _rota();
     const st = situacaoAssinatura(), r = (location.hash.replace(/^#\/?/, '').split('/')[0] || '');
     let barrou = false;
-    if (!st.liberado && !['assinatura', 'config'].includes(r)) { history.replaceState(null, '', '#/assinatura'); barrou = true; }
+    const espiar = !st.liberado && st.tipo === 'sem'; /* conta nova sem cartão: pode olhar tudo; ao usar, aparece o aviso */
+    if (!st.liberado && !espiar && !['assinatura', 'config'].includes(r)) { history.replaceState(null, '', '#/assinatura'); barrou = true; }
     _rota();
-    if (!st.liberado && (barrou || !sessionStorage.getItem('imovyn_aviso_pg'))) setTimeout(() => avisoPagamento(st), 350);
+    if (!st.liberado && !espiar && (barrou || !sessionStorage.getItem('imovyn_aviso_pg'))) setTimeout(() => avisoPagamento(st), 350);
+    if (espiar && r !== 'assinatura') { const c = $('#content'); if (c) c.insertAdjacentHTML('afterbegin', `<div class="ass-faixa esp"><span><b>Você está conhecendo o sistema.</b> Para cadastrar e usar de verdade, comece seus ${DIAS_TESTE} dias grátis.</span><button class="btn sm pri" type="button" data-act="avisoPg">Começar ${DIAS_TESTE} dias grátis</button></div>`); return; }
     const el = $('#content'); if (!el || st.tipo === 'isenta' || st.tipo === 'carregando') return;
     let aviso = '';
     if (st.tipo === 'teste') aviso = st.cartao ? `<div class="ass-faixa"><span><b>${st.dias === 0 ? 'Último dia grátis' : st.dias + (st.dias === 1 ? ' dia grátis' : ' dias grátis')}.</b> A 1ª cobrança no cartão é em ${fmtData(st.ate)}.</span><a class="btn sm" href="#/assinatura">Ver assinatura</a></div>` : `<div class="ass-faixa"><span><b>${st.dias === 0 ? 'Último dia grátis' : st.dias + (st.dias === 1 ? ' dia grátis' : ' dias grátis')}</b> para testar tudo.</span><a class="btn sm pri" href="#/assinatura">Assinar agora</a></div>`;
@@ -6316,6 +6319,24 @@ function avisoPagamento(st) {
       : '<div class="notice info small">Peça para o administrador da imobiliária concluir a assinatura.</div>'}
     <ul class="ap-ok"><li>Pagamento seguro pelo Mercado Pago</li>${sem ? '<li>Cancele quando quiser, sem multa</li>' : ''}<li>Também aceita Pix ou débito na tela de planos</li></ul></div>`;
   modal({ titulo: '', tam: 'sm', corpo, rodape: `<button class="btn ghost" data-close>Ver planos com calma</button>` });
+}
+
+/* modo "conhecer": bloqueia ações (cadastrar, editar, salvar) e mostra o aviso de pagamento */
+const ACOES_LIVRES = new Set(['assinar', 'assPer', 'cancelarAssinatura', 'instalarApp', 'avisoPg', 'proxPend', 'mkAba', 'verLanc', 'toggleMc', 'histOb', 'catCopiar', 'copiar', 'zerarAparelho']);
+const soConhecendo = () => { try { if (!U || !Nuvem.assinOk) return false; const st = situacaoAssinatura(); return !st.liberado && st.tipo === 'sem'; } catch { return false; } };
+ACT.avisoPg = () => avisoPagamento(situacaoAssinatura());
+document.addEventListener('click', e => {
+  if (!soConhecendo()) return;
+  const b = e.target.closest('[data-act]');
+  if (b && !ACOES_LIVRES.has(b.dataset.act) && !b.closest('.ap-av')) { e.preventDefault(); e.stopImmediatePropagation(); avisoPagamento(situacaoAssinatura()); }
+}, true);
+document.addEventListener('submit', e => {
+  if (!soConhecendo() || e.target.closest('.login')) return;
+  e.preventDefault(); e.stopImmediatePropagation(); avisoPagamento(situacaoAssinatura());
+}, true);
+{
+  const _salvar = salvar;
+  salvar = async function (...x) { if (soConhecendo()) { avisoPagamento(situacaoAssinatura()); return; } return _salvar(...x); };
 }
 /* =====================================================================
    COLOCAR O APP NA TELA DE INÍCIO (passo a passo bem simples)
