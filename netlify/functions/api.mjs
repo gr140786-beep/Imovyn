@@ -6,11 +6,27 @@ import { initializeApp, cert, getApps } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 
-export const PLANOS = (env = {}) => ({
-  mensal: { valor: Number(env.PRECO_MENSAL || 229.9), meses: 1, nome: "imovyn Mensal" },
-  anual: { valor: Number(env.PRECO_ANUAL || 1890), meses: 12, nome: "imovyn Anual" },
+// Planos por tamanho da imobiliária. Anual = 10 meses (2 meses grátis).
+// Na Netlify dá para mudar os preços sem mexer no código: PRECO_ESSENCIAL, PRECO_PROFISSIONAL, PRECO_IMOBILIARIA (mensais).
+export const NIVEIS = (env = {}) => ({
+  essencial: { nome: "Essencial", mes: Number(env.PRECO_ESSENCIAL || 229.9) },
+  profissional: { nome: "Profissional", mes: Number(env.PRECO_PROFISSIONAL || 379.9) },
+  imobiliaria: { nome: "Imobiliária", mes: Number(env.PRECO_IMOBILIARIA || 597.9) },
 });
+export const PLANOS = (env = {}) => {
+  const o = {};
+  for (const [k, n] of Object.entries(NIVEIS(env))) {
+    o[k + "_mensal"] = { valor: n.mes, meses: 1, nome: "imovyn " + n.nome + " Mensal" };
+    o[k + "_anual"] = { valor: Math.round(n.mes * 10 * 100) / 100, meses: 12, nome: "imovyn " + n.nome + " Anual" };
+  }
+  o.mensal = { valor: Number(env.PRECO_MENSAL || 229.9), meses: 1, nome: "imovyn Mensal" }; // planos antigos (compatibilidade)
+  o.anual = { valor: Number(env.PRECO_ANUAL || 1890), meses: 12, nome: "imovyn Anual" };
+  return o;
+};
 const TID_PRINCIPAL = "principal"; // cliente fundador (Alto Lar): dados na raiz do banco
+const FUNDADOR_GRATIS_ATE = "2026-11-27"; // Alto Lar: 1 mês grátis para os testes; a 1ª cobrança só depois disso
+const diasTeste = (env = {}) => Number(env.DIAS_TESTE || 7);
+export function addDaysISO(iso, n) { const d = new Date(String(iso).slice(0, 10) + "T12:00:00Z"); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
 export function addMonthsISO(iso, months, extraDays = 0) {
   const d = new Date(String(iso).slice(0, 10) + "T12:00:00Z");
   d.setUTCMonth(d.getUTCMonth() + months);
@@ -34,7 +50,9 @@ export async function handleAssinatura(body, token, deps, env = {}) {
   if (body.acao === "cancelar") {
     if (!cur.mpAssinatura || cur.status === "cancelada") return { status: 400, json: { erro: "Você não tem assinatura ativa." } };
     await deps.mp("/preapproval/" + cur.mpAssinatura, { method: "PUT", body: { status: "cancelled" } });
-    await deps.db.set(tid, { status: "cancelada", canceladaEm: hoje }, true);
+    const upd = { status: "cancelada", canceladaEm: hoje };
+    if (cur.status === "teste" && cur.cobrancaEm) upd.validoAte = cur.cobrancaEm; // cancelou no teste: usa até o fim do teste e não paga nada
+    await deps.db.set(tid, upd, true);
     return { status: 200, json: { ok: true } };
   }
 
@@ -60,14 +78,19 @@ export async function handleAssinatura(body, token, deps, env = {}) {
   }
 
   // Cartão de crédito: assinatura com renovação automática.
+  // Teste grátis: só no cartão e só uma vez por imobiliária. A 1ª cobrança fica para depois do teste (start_date).
   const auto = { frequency: plano.meses, frequency_type: "months", transaction_amount: plano.valor, currency_id: "BRL" };
-  if (cur.validoAte && cur.validoAte > hoje && cur.status !== "cancelada") auto.start_date = cur.validoAte + "T12:00:00.000-03:00";
+  let inicio = "", comTeste = false;
+  if (cur.validoAte && cur.validoAte > hoje && cur.status !== "cancelada") inicio = cur.validoAte;
+  else if (tid === TID_PRINCIPAL) { if (FUNDADOR_GRATIS_ATE > hoje) inicio = FUNDADOR_GRATIS_ATE; }
+  else if (!cur.trialUsado) { inicio = addDaysISO(hoje, diasTeste(env)); comTeste = true; }
+  if (inicio) auto.start_date = inicio + "T12:00:00.000-03:00";
   const pre = await deps.mp("/preapproval", { method: "POST", body: {
     reason: plano.nome, external_reference: tid, payer_email: user.email,
     auto_recurring: auto, back_url: site + "/?assinatura=ok", status: "pending",
   } });
   if (!pre || !pre.init_point) return { status: 502, json: { erro: "O Mercado Pago não abriu o pagamento agora. Tente de novo em instantes." } };
-  await deps.db.set(tid, { mpPendente: pre.id, planoPendente: body.plano, linkPagamento: pre.init_point, atualizado: hoje }, true);
+  await deps.db.set(tid, { mpPendente: pre.id, planoPendente: body.plano, linkPagamento: pre.init_point, testePendente: comTeste ? inicio : null, atualizado: hoje }, true);
   return { status: 200, json: { url: pre.init_point } };
 }
 
@@ -111,8 +134,9 @@ export async function handleWebhook(evento, query, deps, env = {}) {
   const tid = pre && pre.external_reference;
   if (!tid || !tidValido(tid)) return { status: 200, text: "sem imobiliaria" };
   const cur = (await deps.db.get(tid)) || {};
-  const plano = (pre.auto_recurring && pre.auto_recurring.frequency) === 12 ? "anual" : "mensal";
-  const meses = plano === "anual" ? 12 : 1;
+  const anual = (pre.auto_recurring && pre.auto_recurring.frequency) === 12;
+  const plano = (cur.mpPendente === pre.id && cur.planoPendente) || (cur.mpAssinatura === pre.id && cur.plano) || (anual ? "anual" : "mensal");
+  const meses = anual ? 12 : 1;
   const ehNova = cur.mpPendente === pre.id;
   const ehAtual = cur.mpAssinatura === pre.id;
   if (!ehNova && !ehAtual) return { status: 200, text: "assinatura antiga" };
@@ -122,8 +146,11 @@ export async function handleWebhook(evento, query, deps, env = {}) {
     if (cur.mpAssinatura && cur.mpAssinatura !== pre.id) {
       try { await deps.mp("/preapproval/" + cur.mpAssinatura, { method: "PUT", body: { status: "cancelled" } }); } catch (e) { /* já encerrada */ }
     }
-    Object.assign(upd, { mpAssinatura: pre.id, mpPendente: null, plano, forma: "cartao", valor: pre.auto_recurring.transaction_amount, linkPagamento: "" });
-    if (cur.status !== "ativa") upd.status = "pendente";
+    Object.assign(upd, { mpAssinatura: pre.id, mpPendente: null, planoPendente: null, plano, forma: "cartao", valor: pre.auto_recurring.transaction_amount, linkPagamento: "", testePendente: null });
+    if (cur.testePendente && !cur.trialUsado && cur.status !== "ativa") {
+      // cartão cadastrado: começa o teste grátis; a 1ª cobrança é no fim dele (+3 dias de folga para o Mercado Pago cobrar)
+      Object.assign(upd, { status: "teste", trialUsado: true, cobrancaEm: cur.testePendente, validoAte: addDaysISO(cur.testePendente, 3) });
+    } else if (cur.status !== "ativa") upd.status = "pendente";
   }
   if (pagamento) {
     const hist = { id: String(pagamento.id), valor: pagamento.transaction_amount, vencimento: dia(pagamento.debit_date || pagamento.date_created), evento: "", em: deps.today() };
@@ -141,7 +168,7 @@ export async function handleWebhook(evento, query, deps, env = {}) {
     }
     upd.historico = [hist, ...((cur.historico || []).filter((h) => h.id !== hist.id))].slice(0, 24);
   } else if (ehAtual || (ehNova && pre.status === "authorized")) {
-    if (pre.status === "cancelled") upd.status = "cancelada";
+    if (pre.status === "cancelled") { upd.status = "cancelada"; if (cur.status === "teste" && cur.cobrancaEm) upd.validoAte = cur.cobrancaEm; }
     else if (pre.status === "paused") upd.status = "atrasada";
   }
   if (Object.keys(upd).length) await deps.db.set(tid, upd, true);
