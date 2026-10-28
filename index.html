@@ -1279,6 +1279,8 @@ body:has(.ov) #ins-faixa{display:none}
 .ass-pl-s{min-height:20px}
 .ass-pl-f{margin-top:auto;display:flex;flex-direction:column;gap:10px;padding-top:8px}
 .ass-pl-f .btn{white-space:nowrap}
+.ass-it li.nao{color:var(--muted)}.ass-it li.nao::before{content:"✕";color:#c0392b}
+.ass-tudo{border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:0 0 14px;background:var(--card)}.ass-tudo>b{display:block;font-size:14px;margin-bottom:8px}.ass-tudo .ass-it{display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;margin:0}@media(max-width:560px){.ass-tudo .ass-it{grid-template-columns:1fr}}
 .ass-pls.t2 .ass-it li{font-size:13.5px;line-height:1.35;padding-left:20px;text-indent:-20px}
 @media (max-width:700px){.ass-pl-h{min-height:0}}
 .ap-av{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:4px 2px}
@@ -6405,7 +6407,9 @@ function pgAssinatura() {
       <div class="ass-pl-h"><b>${anual ? 'Anual' : 'Mensal'}</b><span class="small muted">${anual ? 'Pague uma vez por ano e economize' : 'Pague mês a mês, sem compromisso'}</span></div>
       <div class="ass-v">${brl(p.valor)}<small>/${anual ? 'ano' : 'mês'}</small></div>
       <span class="small muted ass-pl-s">${anual ? `equivale a ${brl(p.valor / 12)} por mês` : 'cobrado todo mês'}</span>
-      <ul class="ass-it"><li><b>Usuários ilimitados</b></li><li>Controle de aluguel e contratos</li><li>Site de imóveis com WhatsApp</li><li>Imóveis sem limite</li></ul>
+      <ul class="ass-it">${anual
+        ? `<li><b>Economia de ${brl(eco)} por ano</b></li><li>Preço fixo pelos 12 meses</li><li>Você paga só uma vez por ano</li>`
+        : `<li>Sem fidelidade, cancele quando quiser</li><li>Pagamento mês a mês</li><li class="nao">Sem desconto, você não economiza</li>`}</ul>
       <div class="ass-pl-f">${atual ? '<span class="pill pago" style="align-self:center">Seu plano</span>' : ''}
       ${admin && !atual ? `<button class="btn pri" data-act="assinar" data-plano="${k}" data-forma="cartao">${podeTeste ? `Começar ${TESTE_TXT} grátis` : 'Assinar no cartão'}</button><button class="btn" data-act="assinar" data-plano="${k}" data-forma="avulso">Pix ou débito</button>` : ''}</div></div>`; };
   const linhaAte = st.tipo === 'teste' && st.cartao ? ['1ª cobrança no cartão', fmtData(st.ate)] : [st.tipo === 'teste' ? 'Grátis até' : 'Acesso liberado até', st.ate ? fmtData(st.ate) : '-'];
@@ -6415,6 +6419,7 @@ function pgAssinatura() {
       ${a.linkPagamento && !['ativa', 'teste'].includes(st.tipo) ? `<a class="btn ok" style="margin-top:14px" href="${esc(a.linkPagamento)}" target="_blank" rel="noopener">Concluir no Mercado Pago</a>` : ''}
       ${!admin ? '<p class="small muted" style="margin-bottom:0">Só o administrador da imobiliária pode assinar ou cancelar.</p>' : ''}</div></div>
     <h3 style="margin:22px 0 10px">Escolha o plano</h3>
+    <div class="ass-tudo"><b>Os dois planos têm tudo do Imovyn:</b><ul class="ass-it"><li>Usuários ilimitados</li><li>Imóveis sem limite</li><li>Controle de aluguel e contratos</li><li>Site de imóveis com WhatsApp</li></ul></div>
     <div class="ass-pls t2">${pl('mensal')}${pl('anual')}</div>
     <p class="small muted">${podeTeste ? `<b>Começar ${TESTE_TXT} grátis:</b> você cadastra o cartão de crédito no Mercado Pago e usa tudo por 1 mês. A cobrança só começa depois. Pode cancelar aqui mesmo antes disso, sem pagar nada. Pix ou débito não tem teste grátis. ` : ''}Cartão de crédito: renova sozinho a cada período. Pix ou débito: você paga um período por vez e, se pagar antes de vencer, os dias se somam.</p>
     ${admin && a.mpAssinatura && a.status !== 'cancelada' ? `<button class="btn danger" data-act="cancelarAssinatura" style="margin-top:6px">${st.tipo === 'teste' && st.cartao ? 'Cancelar o teste (não será cobrado)' : 'Cancelar renovação automática'}</button>` : ''}
