@@ -1294,6 +1294,71 @@ body:has(.ov) #ins-faixa{display:none}
 .ap-ok{list-style:none;padding:0;margin:6px 0 0;display:flex;flex-direction:column;gap:6px;font-size:13.5px;color:#4b5059}.ap-ok li::before{content:"✓";color:#23874f;font-weight:800;margin-right:8px}
 .ov:has(.ap-av) .modal-h h3:empty{display:none}
 .ass-faixa.esp{background:#16181c;color:#fff;border-color:#16181c}.ass-faixa.esp .btn.pri{background:#fff;color:#16181c;border-color:#fff}
+/* ===== modo escuro (grafite) ===== */
+html.escuro{color-scheme:dark}
+html.escuro body:not(.cat-on){--bg:#121316;--card:#1b1d21;--line:#2b2e34;--text:#eceef1;--muted:#9aa0a8;--g50:#202328;--g100:#262a30;--g200:#33373e;--g300:#4a4f57;--metal-soft:#23262b;--gold-soft:#2a2519;--blue-bg:#16243a;background:#121316!important;color:#eceef1}
+html.escuro body:not(.cat-on) .side{background:#16181b!important;color:#e6e8eb;box-shadow:1px 0 0 #2b2e34!important}
+html.escuro body:not(.cat-on) .brand{border-bottom-color:#2b2e34!important}
+html.escuro body:not(.cat-on) .mv-logo b,html.escuro body:not(.cat-on) .brand-t b{color:#fff!important}
+html.escuro body:not(.cat-on) .nav a{color:#c7cbd1!important}html.escuro body:not(.cat-on) .nav a:hover{background:#22252a!important;color:#fff!important}
+html.escuro body:not(.cat-on) .nav a.on{background:#fff!important;color:#111316!important}html.escuro body:not(.cat-on) .nav a.on svg{color:#b89b63!important}
+html.escuro body:not(.cat-on) .side-foot{border-top-color:#2b2e34!important;color:#c7cbd1}
+html.escuro body:not(.cat-on) .top{background:rgba(18,19,22,.85)!important;border-bottom-color:#2b2e34!important;box-shadow:none!important}
+html.escuro body:not(.cat-on) .search,html.escuro body:not(.cat-on) .search input{background:#1f2226!important;color:#eceef1!important;border-color:#2b2e34!important}
+html.escuro body:not(.cat-on) .search-res{background:#1b1d21!important;border-color:#2b2e34!important}
+html.escuro body:not(.cat-on) .sino,html.escuro body:not(.cat-on) .icon-btn{background:#1f2226!important;color:#e6e8eb!important;border-color:#2b2e34!important}
+html.escuro body:not(.cat-on) .sync-st{background:#1f2226!important;border-color:#2b2e34!important;color:#cfd3d8!important}
+html.escuro body:not(.cat-on) .card,html.escuro body:not(.cat-on) .kpi,html.escuro body:not(.cat-on) .ass-pl,html.escuro body:not(.cat-on) .hero,html.escuro body:not(.cat-on) .ob,html.escuro body:not(.cat-on) .mc,html.escuro body:not(.cat-on) .doc,html.escuro body:not(.cat-on) .reg,html.escuro body:not(.cat-on) .un,html.escuro body:not(.cat-on) .empty,html.escuro body:not(.cat-on) .cq,html.escuro body:not(.cat-on) .resumo-ct,html.escuro body:not(.cat-on) .alert-i,html.escuro body:not(.cat-on) .dl,html.escuro body:not(.cat-on) .cat-adm-i,html.escuro body:not(.cat-on) .ins-p{background:#1b1d21!important;border-color:#2b2e34!important;color:#eceef1;box-shadow:0 1px 0 rgba(255,255,255,.02),0 10px 26px rgba(0,0,0,.35)!important}
+html.escuro body:not(.cat-on) .card-h,html.escuro body:not(.cat-on) .card-f{border-color:#2b2e34!important;background:transparent!important}
+html.escuro body:not(.cat-on) h1,html.escuro body:not(.cat-on) h2,html.escuro body:not(.cat-on) h3,html.escuro body:not(.cat-on) h4,html.escuro body:not(.cat-on) b,html.escuro body:not(.cat-on) strong,html.escuro body:not(.cat-on) .page-h h1,html.escuro body:not(.cat-on) .kpi b,html.escuro body:not(.cat-on) .ass-v{color:#f3f4f6}
+html.escuro body:not(.cat-on) .muted,html.escuro body:not(.cat-on) .small.muted,html.escuro body:not(.cat-on) .xs.muted,html.escuro body:not(.cat-on) .help,html.escuro body:not(.cat-on) .page-h p{color:#9aa0a8!important}
+html.escuro body:not(.cat-on) input:not([type=checkbox]):not([type=radio]):not([type=color]),html.escuro body:not(.cat-on) select,html.escuro body:not(.cat-on) textarea{background:#202328!important;color:#eceef1!important;border-color:#33373e!important}
+html.escuro body:not(.cat-on) input::placeholder,html.escuro body:not(.cat-on) textarea::placeholder{color:#6f757e!important}
+html.escuro body:not(.cat-on) label,html.escuro body:not(.cat-on) .fld label{color:#c7cbd1}
+html.escuro body:not(.cat-on) .btn{background:#23262b!important;color:#eceef1!important;border-color:#383c43!important}
+html.escuro body:not(.cat-on) .btn:hover{background:#2b2f35!important}
+html.escuro body:not(.cat-on) .btn.pri{background:#f3f4f6!important;color:#111316!important;border-color:#f3f4f6!important}
+html.escuro body:not(.cat-on) .btn.ok{background:#1f8a4c!important;color:#fff!important;border-color:#1f8a4c!important}
+html.escuro body:not(.cat-on) .btn.danger{background:#3a1d1b!important;color:#ffb4ab!important;border-color:#5a2a26!important}
+html.escuro body:not(.cat-on) .btn.ghost{background:transparent!important;border-color:transparent!important;color:#cfd3d8!important}
+html.escuro body:not(.cat-on) .tbl,html.escuro body:not(.cat-on) .tbl td,html.escuro body:not(.cat-on) .tbl th{border-color:#2b2e34!important;color:#e6e8eb}
+html.escuro body:not(.cat-on) .tbl thead th,html.escuro body:not(.cat-on) .tbl th{background:#202328!important;color:#9aa0a8!important}
+html.escuro body:not(.cat-on) .tbl tbody tr:hover td{background:#22252a!important}
+html.escuro body:not(.cat-on) table.cartao tr{background:#1b1d21!important;border-color:#2b2e34!important}
+html.escuro body:not(.cat-on) .ov{background:rgba(0,0,0,.6)!important}
+html.escuro body:not(.cat-on) .modal{background:#1b1d21!important;color:#eceef1;border:1px solid #2b2e34}
+html.escuro body:not(.cat-on) .modal-h,html.escuro body:not(.cat-on) .modal-f{border-color:#2b2e34!important;background:#17191c!important}
+html.escuro body:not(.cat-on) .notice{background:#1f2226!important;border-color:#33373e!important;color:#dfe2e6!important}
+html.escuro body:not(.cat-on) .notice.info{background:#16243a!important;border-color:#24406a!important;color:#cfe0ff!important}
+html.escuro body:not(.cat-on) .notice.bad{background:#2c1716!important;border-color:#5a2a26!important;color:#ffc9c2!important}
+html.escuro body:not(.cat-on) .notice.warn{background:#2b2414!important;border-color:#5a4a20!important;color:#f3dfa6!important}
+html.escuro body:not(.cat-on) .notice.ok{background:#132a1d!important;border-color:#1f5a37!important;color:#bdeccd!important}
+html.escuro body:not(.cat-on) .ass-faixa{background:#1f1c15!important;border-color:#4a3f26!important;color:#eee1c3}
+html.escuro body:not(.cat-on) .ass-faixa.esp{background:#f3f4f6!important;color:#111316!important;border-color:#f3f4f6!important}html.escuro body:not(.cat-on) .ass-faixa.esp b{color:#111316}html.escuro body:not(.cat-on) .ass-faixa.esp .btn.pri{background:#111316!important;color:#fff!important;border-color:#111316!important}
+html.escuro body:not(.cat-on) .ass-per{background:#202328!important}html.escuro body:not(.cat-on) .ass-per button{color:#9aa0a8}html.escuro body:not(.cat-on) .ass-per button.on{background:#33373e!important;color:#fff!important}
+html.escuro body:not(.cat-on) .ass-pl.destaque,html.escuro body:not(.cat-on) .ass-pls.t2 .ass-pl.destaque{border-color:#f3f4f6!important;box-shadow:0 0 0 1px #f3f4f6,0 14px 34px rgba(0,0,0,.4)!important}
+html.escuro body:not(.cat-on) .ap-pl{background:#f3f4f6!important;color:#111316!important}html.escuro body:not(.cat-on) .ap-pl b{color:#111316}html.escuro body:not(.cat-on) .ap-pl:nth-of-type(2){background:#1b1d21!important;color:#fff!important;border-color:#f3f4f6!important}html.escuro body:not(.cat-on) .ap-pl:nth-of-type(2) b{color:#fff}
+html.escuro body:not(.cat-on) .ap-ic,html.escuro body:not(.cat-on) .ins-app,html.escuro body:not(.cat-on) .ins-f-i{background:#f3f4f6!important}
+html.escuro body:not(.cat-on) .ins-top{background:#202328!important}html.escuro body:not(.cat-on) .ins-n{background:#f3f4f6!important;color:#111316!important}html.escuro body:not(.cat-on) .ins-top span,html.escuro body:not(.cat-on) .ins-p>div>span,html.escuro body:not(.cat-on) .ap-av p,html.escuro body:not(.cat-on) .ap-ok{color:#b4b9c0!important}
+html.escuro body:not(.cat-on) #ins-faixa{background:#1b1d21!important;border-color:#2b2e34!important}html.escuro body:not(.cat-on) .ins-f-x{background:#262a30!important;color:#cfd3d8!important}
+html.escuro body:not(.cat-on) .tabbar{background:rgba(22,24,27,.95)!important;border-top-color:#2b2e34!important}html.escuro body:not(.cat-on) .tabbar a{color:#9aa0a8!important}html.escuro body:not(.cat-on) .tabbar a.on{color:#fff!important}
+html.escuro body:not(.cat-on) .ftabs a,html.escuro body:not(.cat-on) .ftabs button{color:#9aa0a8!important}html.escuro body:not(.cat-on) .ftabs .on,html.escuro body:not(.cat-on) .ftabs a.on{color:#fff!important;border-color:#b89b63!important}
+html.escuro body:not(.cat-on) .pill{filter:saturate(.9) brightness(.95)}
+html.escuro body:not(.cat-on) .toast{background:#f3f4f6!important;color:#111316!important}
+html.escuro body:not(.cat-on) .cal-d{background:#1b1d21!important;border-color:#2b2e34!important;color:#e6e8eb}
+html.escuro body:not(.cat-on) hr{border-color:#2b2e34}
+html.escuro body:not(.cat-on) a{color:#9cc1ff}html.escuro body:not(.cat-on) .nav a,html.escuro body:not(.cat-on) .btn,html.escuro body:not(.cat-on) .tabbar a{text-decoration:none}
+html.escuro body:not(.cat-on) .month-sel,html.escuro body:not(.cat-on) .sec-t{color:#eceef1}
+html.escuro body:not(.cat-on) .side-foot .btn{color:#ddd!important}
+html.escuro body:not(.cat-on) .tema-btn svg{color:#f3d48a}
+.tema-btn{border:1px solid var(--line);cursor:pointer}
+html.escuro body:not(.cat-on) .demo-flag{background:#1f2226!important;border-color:#33373e!important;color:#c7cbd1!important}
+html.escuro body:not(.cat-on) .tabs a,html.escuro body:not(.cat-on) .tabs button{color:#9aa0a8!important}html.escuro body:not(.cat-on) .tabs .on,html.escuro body:not(.cat-on) .tabs button.on,html.escuro body:not(.cat-on) .tabs a.on{color:#fff!important;border-bottom-color:#b89b63!important}
+html.escuro body:not(.cat-on) .month-sel{background:#202328!important;border-color:#33373e!important}html.escuro body:not(.cat-on) .month-sel button{color:#eceef1!important}
+html.escuro body:not(.cat-on) .brand .mv-logo svg,html.escuro body:not(.cat-on) .side .mv-logo svg{background:#f3f4f6;border-radius:10px;padding:3px;box-sizing:content-box}
+html.escuro body:not(.cat-on) .tag{border-color:#4a4f57!important;color:#c7cbd1!important;background:transparent!important}
+.logo-prev .mv-logo b,.logo-prev .brand-t b{color:#fff!important}.logo-prev .brand-t span{color:#c9ccd1!important}
+.logo-prev .mv-logo svg{background:#f3f4f6;border-radius:10px;padding:3px;box-sizing:content-box}
 </style>
 </head>
 <body>
@@ -6397,6 +6462,33 @@ function faixaInstalar() {
   shellLogin = function (form) { _shell(form); if (appInstalado()) return; const b = $('.lg3 .login-box'); if (b) b.insertAdjacentHTML('afterend', `<button type="button" class="lg3-ins" data-act="instalarApp">${ic('celular')} Como colocar o imovyn na tela do celular</button>`); const x = $('.lg3-ins'); if (x) x.onclick = guiaInstalar; };
 }
 /* =====================================================================
+   MODO CLARO / ESCURO (escuro inspirado no grafite da logo).
+   Fica salvo no aparelho. Botão de sol/lua no topo e em Configurações.
+   O site público de imóveis (catálogo) continua sempre claro.
+   ===================================================================== */
+Object.assign(ICONS, {
+  lua: '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+  sol: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>'
+});
+const temaAtual = () => { try { return localStorage.getItem('imovyn_tema') === 'escuro' ? 'escuro' : 'claro'; } catch { return 'claro'; } };
+function aplicarTema(t = temaAtual()) {
+  document.documentElement.classList.toggle('escuro', t === 'escuro');
+  const m = document.querySelector('meta[name="theme-color"]'); if (m) m.setAttribute('content', t === 'escuro' ? '#121316' : '#ffffff');
+  const b = document.getElementById('b-tema'); if (b) { b.innerHTML = ic(t === 'escuro' ? 'sol' : 'lua'); b.setAttribute('aria-label', t === 'escuro' ? 'Usar modo claro' : 'Usar modo escuro'); b.title = b.getAttribute('aria-label'); }
+}
+function trocarTema() { const t = temaAtual() === 'escuro' ? 'claro' : 'escuro'; try { localStorage.setItem('imovyn_tema', t); } catch { } aplicarTema(t); toast(t === 'escuro' ? 'Modo escuro ligado.' : 'Modo claro ligado.', 'ok'); }
+ACT.trocarTema = () => trocarTema();
+aplicarTema();
+{
+  const _shell = montarShell;
+  montarShell = function (...x) {
+    _shell(...x);
+    const s = document.getElementById('sino');
+    if (s && !document.getElementById('b-tema')) { s.insertAdjacentHTML('afterend', `<button type="button" class="sino tema-btn" id="b-tema"></button>`); document.getElementById('b-tema').onclick = trocarTema; }
+    aplicarTema();
+  };
+}
+/* =====================================================================
    Relatórios, configurações, integrações, importação, backup, demonstração
    ===================================================================== */
 const relF = { de: addMes(compAtual(), -2), ate: compAtual(), tipo: 'financeiro', prop: '', im: '', inq: '' };
@@ -6502,7 +6594,7 @@ function cfgEmpresa() {
   return `<div class="grid g2"><div class="card"><div class="card-h"><h3>Dados da imobiliária</h3></div><div class="card-b"><div class="form">
       <div class="fld c12"><label for="emp-n">Nome</label><input id="emp-n" value="${esc(S.empresa.nome)}"></div><div class="fld c12"><label for="emp-e">Endereço</label><input id="emp-e" value="${esc(S.empresa.endereco || '')}"></div>
       <div class="fld c4"><label for="emp-c">Cidade/UF</label><input id="emp-c" value="${esc(S.empresa.cidade || '')}"></div><div class="fld c4"><label for="emp-t">Telefone</label><input id="emp-t" value="${esc(S.empresa.telefone || '')}"></div><div class="fld c6"><label for="emp-m">E-mail da imobiliária</label><input id="emp-m" type="email" value="${esc(S.empresa.email || '')}"><span class="help">Vai na assinatura das mensagens.</span></div><div class="fld c6"><label for="emp-app">Abrir e-mails pelo</label><select id="emp-app"><option value="gmail" ${S.config.appEmail !== 'app' ? 'selected' : ''}>Gmail (navegador)</option><option value="app" ${S.config.appEmail === 'app' ? 'selected' : ''}>App de e-mail do aparelho</option></select></div><div class="fld c4"><label for="emp-w">WhatsApp da imobiliária</label><input id="emp-w" inputmode="tel" value="${esc(fmtTel(S.empresa.whatsapp || ''))}"><span class="help">Vai na assinatura das mensagens.</span></div></div></div></div>
-    <div class="card"><div class="card-h"><h3>Logotipo</h3></div><div class="card-b"><div style="background:var(--g800);border-radius:10px;padding:18px;display:flex;align-items:center;gap:12px;margin-bottom:12px" class="brand">${logoHTML(true)}</div>
+    <div class="card"><div class="card-h"><h3>Logotipo</h3></div><div class="card-b"><div style="background:var(--g800);border-radius:10px;padding:18px;display:flex;align-items:center;gap:12px;margin-bottom:12px" class="brand logo-prev">${logoHTML(true)}</div>
       <div class="row"><label class="btn">${ic('img')} Enviar logotipo<input id="lg-in" type="file" accept="image/*" hidden></label>${S.empresa.logo ? `<button class="btn danger" data-act="rmLogo">Voltar ao logo padrão</button>` : ''}</div><p class="small muted">PNG com fundo transparente fica melhor sobre o menu grafite.</p></div></div></div>
     <div class="card" style="margin-top:16px"><div class="card-h"><h3>Conta da imobiliária (para receber dos inquilinos)</h3></div><div class="card-b"><p class="small muted" style="margin-top:0">Os dados vão na mensagem de cobrança para o inquilino pagar por transferência ou depósito. Pode usar junto com o Pix ou só a conta.</p><div class="form">
       ${(() => { const c = contaImob(); return `<div class="fld c4"><label for="rb-b">Banco</label><input id="rb-b" value="${esc(c.banco || '')}"></div><div class="fld c2"><label for="rb-a">Agência</label><input id="rb-a" value="${esc(c.agencia || '')}"></div><div class="fld c3"><label for="rb-c">Conta com dígito</label><input id="rb-c" value="${esc(c.conta || '')}"></div>
