@@ -181,9 +181,11 @@ export async function handleWebhook(evento, query, deps, env = {}) {
 const PAINEL_CORS = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "POST, OPTIONS", "Access-Control-Allow-Headers": "content-type, x-painel-senha", "Access-Control-Max-Age": "600" };
 const painelJson = (o, status = 200) => new Response(JSON.stringify(o), { status, headers: Object.assign({ "Content-Type": "application/json", "Cache-Control": "no-store" }, PAINEL_CORS) });
 export function painelSenhaOk(enviada, env = {}) {
-  const certa = String(env.PAINEL_SENHA || "");
+  // Tanto faz maiúscula, minúscula ou espaço sobrando (o celular costuma mudar a 1ª letra sozinho)
+  const limpa = (x) => String(x || "").normalize("NFC").replace(/\s+/g, "").toLowerCase();
+  const certa = limpa(env.PAINEL_SENHA);
   if (certa.length < 10) return null; // painel desligado
-  const h = (x) => createHash("sha256").update(String(x || "")).digest();
+  const h = (x) => createHash("sha256").update(limpa(x)).digest();
   return timingSafeEqual(h(enviada), h(certa));
 }
 const isoData = (x) => { if (!x) return ""; const d = new Date(x); return isNaN(d) ? "" : d.toISOString(); };
